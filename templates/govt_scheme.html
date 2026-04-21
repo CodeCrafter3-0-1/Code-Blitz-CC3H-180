@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Govt Schemes | HealthGuard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= IMPROVED GOVT SCHEME CSS ================= */
+
+:root{
+--primary:#06b6d4;
+--secondary:#2563eb;
+--success:#22c55e;
+--violet:#8b5cf6;
+--dark:#0f172a;
+--text:#475569;
+--white:#ffffff;
+}
+
+/* PAGE */
+.scheme-page{
+padding:28px;
+animation:fadeUp .8s ease;
+}
+
+/* HERO GRID */
+.scheme-hero{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:24px;
+margin-bottom:26px;
+align-items:start;
+}
+
+/* COMMON CARD */
+.hero-box,
+.form-card,
+.info-card,
+.stat-box{
+position:relative;
+background:rgba(255,255,255,.82);
+backdrop-filter:blur(18px);
+border-radius:24px;
+overflow:hidden;
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+transition:.35s ease;
+}
+
+/* GRADIENT BORDER */
+.hero-box::before,
+.form-card::before,
+.info-card::before,
+.stat-box::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:24px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--violet)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+pointer-events:none;
+}
+
+/* HOVER */
+.hero-box:hover,
+.form-card:hover,
+.info-card:hover,
+.stat-box:hover{
+transform:translateY(-6px);
+box-shadow:0 28px 50px rgba(0,0,0,.12);
+}
+
+/* HERO */
+.hero-box{
+padding:30px;
+margin-bottom:20px;
+}
+
+.hero-box h1{
+font-size:34px;
+font-weight:900;
+margin-bottom:12px;
+color:var(--dark);
+}
+
+.hero-box p{
+font-size:16px;
+line-height:1.9;
+color:var(--text);
+}
+
+/* FORM */
+.form-card{
+padding:28px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+margin-top:10px;
+}
+
+.input-wrap{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.input-wrap label{
+font-size:14px;
+font-weight:800;
+color:var(--dark);
+}
+
+.input-wrap input,
+.input-wrap select{
+height:56px;
+border-radius:16px;
+border:1px solid #dbeafe;
+padding:0 16px;
+font-size:15px;
+background:#fff;
+outline:none;
+cursor:text;
+caret-color:#2563eb;   /* CURSOR FIX */
+transition:.3s ease;
+}
+
+.input-wrap input:focus,
+.input-wrap select:focus{
+border-color:var(--primary);
+box-shadow:
+0 0 0 4px rgba(6,182,212,.14),
+0 10px 22px rgba(37,99,235,.08);
+transform:translateY(-1px);
+}
+
+/* Placeholder */
+.input-wrap input::placeholder{
+color:#94a3b8;
+}
+
+/* FULL ROW */
+.full{
+grid-column:1/-1;
+}
+
+/* BUTTON */
+.search-btn{
+height:56px;
+border:none;
+border-radius:18px;
+font-size:16px;
+font-weight:900;
+color:#fff;
+cursor:pointer;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+box-shadow:0 16px 28px rgba(37,99,235,.22);
+transition:.35s ease;
+position:relative;
+overflow:hidden;
+}
+
+.search-btn::before{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:70%;
+height:100%;
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.35),
+transparent
+);
+transition:.7s;
+}
+
+.search-btn:hover::before{
+left:130%;
+}
+
+.search-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 26px 36px rgba(37,99,235,.28);
+}
+
+/* SIDE CARDS */
+.side-cards{
+display:grid;
+gap:18px;
+}
+
+.info-card{
+padding:24px;
+}
+
+.info-card h3{
+font-size:18px;
+font-weight:900;
+margin-bottom:10px;
+color:var(--dark);
+}
+
+.info-card p{
+font-size:14px;
+line-height:1.9;
+color:var(--text);
+}
+
+/* STATS */
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-top:24px;
+}
+
+.stat-box{
+padding:24px;
+text-align:center;
+}
+
+.stat-box h2{
+font-size:30px;
+font-weight:900;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:8px;
+}
+
+.stat-box p{
+font-size:14px;
+font-weight:700;
+color:var(--text);
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(18px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* MOBILE */
+@media(max-width:980px){
+
+.scheme-page{
+padding:16px;
+}
+
+.scheme-hero{
+grid-template-columns:1fr;
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.stats-grid{
+grid-template-columns:1fr;
+}
+
+.hero-box h1{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/doctor">
+<i class="fa-solid fa-user-doctor"></i> Doctor Consultant
+</a>
+
+<a href="/govt-schemes" class="active-link">
+<i class="fa-solid fa-shield-heart"></i> Govt Schemes
+</a>
+
+<a href="/chatbot">
+<i class="fa-solid fa-robot"></i> AI Chatbot
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="dashboard-top">
+<div>
+<h1>🏥 Govt Schemes Finder</h1>
+<p>Find hospitals, insurance benefits and free treatments instantly.</p>
+</div>
+</div>
+
+<div class="scheme-page">
+
+<div class="scheme-hero">
+
+<!-- LEFT -->
+<div>
+
+<div class="hero-box">
+<h1>Ayushman • ECHS • CGHS</h1>
+<p>
+Search by city, scheme and treatment to discover nearby empanelled hospitals,
+coverage limits, eligibility and benefits.
+</p>
+</div>
+
+<div class="form-card">
+
+<form method="POST" action="/search-scheme">
+
+<div class="form-grid">
+
+<div class="input-wrap">
+<label>City</label>
+<input type="text" name="city" placeholder="Enter city" required>
+</div>
+
+<div class="input-wrap">
+<label>Scheme</label>
+<select name="scheme" required>
+<option value="">Select Scheme</option>
+<option>Ayushman Bharat</option>
+<option>ECHS</option>
+<option>CGHS</option>
+<option>ESIC</option>
+<option>State Health Scheme</option>
+</select>
+</div>
+
+<div class="input-wrap full">
+<label>Treatment / Disease</label>
+<input type="text" name="treatment" placeholder="Heart Surgery / Cancer / Diabetes" required>
+</div>
+
+<div class="input-wrap full">
+<button type="submit" class="search-btn">
+<i class="fa-solid fa-magnifying-glass"></i>
+ Search Scheme
+</button>
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="side-cards">
+
+<div class="info-card">
+<h3>💳 Insurance Cover</h3>
+<p>Know treatment limits, package costs and cashless facilities.</p>
+</div>
+
+<div class="info-card">
+<h3>🏥 Nearby Hospitals</h3>
+<p>Search empanelled hospitals with city based results.</p>
+</div>
+
+<div class="info-card">
+<h3>📄 Eligibility</h3>
+<p>Documents required and beneficiary details instantly.</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- STATS -->
+<div class="stats-grid">
+
+<div class="stat-box">
+<h2>5000+</h2>
+<p>Hospitals Listed</p>
+</div>
+
+<div class="stat-box">
+<h2>5L</h2>
+<p>Insurance Cover</p>
+</div>
+
+<div class="stat-box">
+<h2>24/7</h2>
+<p>Scheme Support</p>
+</div>
+
+</div>
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

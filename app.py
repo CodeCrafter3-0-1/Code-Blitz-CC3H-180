@@ -561,6 +561,254 @@ def cancel_appointment():
 
     return redirect('/my-appointments')
 
+
+
+# =====================================================
+# GOVT SCHEMES MAIN PAGE
+# =====================================================
+@app.route('/govt-schemes')
+def govt_schemes():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template("govt_scheme.html")
+
+
+# =====================================================
+# SEARCH GOVT SCHEME
+# APIs Used:
+# 1. Nominatim  -> city coordinates
+# 2. Overpass   -> nearby hospitals
+# =====================================================
+@app.route('/search-scheme', methods=['POST'])
+def search_scheme():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    city = request.form['city'].strip()
+    scheme = request.form['scheme'].strip()
+    treatment = request.form['treatment'].strip()
+
+    hospitals = []
+
+    # =================================================
+    # INTERNAL SCHEME DATA
+    # =================================================
+    schemes = {
+
+        "Ayushman Bharat": {
+            "insurance": "Up to ₹5,00,000 per family every year.",
+            "eligibility": "Low income families, PMJAY eligible beneficiaries.",
+            "documents": [
+                "Aadhaar Card",
+                "Ration Card",
+                "Mobile Number",
+                "Family ID"
+            ],
+            "treatments": [
+                "Heart Surgery",
+                "Cancer Treatment",
+                "Kidney Care",
+                "ICU Support",
+                "Diagnostics"
+            ]
+        },
+
+        "ECHS": {
+            "insurance": "Cashless healthcare for ex-servicemen and dependents.",
+            "eligibility": "Retired Armed Forces personnel.",
+            "documents": [
+                "ECHS Card",
+                "Service Record",
+                "Aadhaar Card"
+            ],
+            "treatments": [
+                "General Surgery",
+                "Cardiac Care",
+                "Orthopedic",
+                "Medicines",
+                "Diagnostics"
+            ]
+        },
+
+        "CGHS": {
+            "insurance": "Govt employee health support & reimbursement.",
+            "eligibility": "Central Govt employees / pensioners.",
+            "documents": [
+                "CGHS Card",
+                "Employee ID",
+                "Aadhaar"
+            ],
+            "treatments": [
+                "OPD",
+                "Dental",
+                "Specialist Consultation",
+                "Diagnostics"
+            ]
+        },
+
+        "ESIC": {
+            "insurance": "Medical support for insured employees.",
+            "eligibility": "ESIC registered workers.",
+            "documents": [
+                "ESIC Number",
+                "Aadhaar",
+                "Employer ID"
+            ],
+            "treatments": [
+                "Maternity",
+                "Emergency",
+                "Medicines",
+                "Surgery"
+            ]
+        },
+
+        "State Health Scheme": {
+            "insurance": "State dependent support packages.",
+            "eligibility": "Depends on state rules.",
+            "documents": [
+                "Aadhaar",
+                "Residence Proof"
+            ],
+            "treatments": [
+                "General Care",
+                "Surgery",
+                "Diagnostics"
+            ]
+        }
+
+    }
+
+    # =================================================
+    # GET SELECTED DATA
+    # =================================================
+    selected = schemes.get(
+        scheme,
+        schemes["Ayushman Bharat"]
+    )
+
+    insurance = selected["insurance"]
+    eligibility = selected["eligibility"]
+    documents = selected["documents"]
+    treatments = selected["treatments"]
+
+    # =================================================
+    # FREE API 1 : NOMINATIM
+    # =================================================
+    try:
+
+        geo_url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json&limit=1"
+
+        geo = requests.get(
+            geo_url,
+            headers={"User-Agent":"HealthGuardAI"},
+            timeout=8
+        ).json()
+
+        if geo:
+
+            lat = geo[0]['lat']
+            lon = geo[0]['lon']
+
+            # =========================================
+            # FREE API 2 : OVERPASS
+            # =========================================
+            overpass_query = f"""
+            [out:json];
+            (
+              node["amenity"="hospital"](around:10000,{lat},{lon});
+              node["amenity"="clinic"](around:10000,{lat},{lon});
+            );
+            out;
+            """
+
+            res = requests.get(
+                "https://overpass-api.de/api/interpreter",
+                params={"data": overpass_query},
+                headers={"User-Agent":"HealthGuardAI"},
+                timeout=12
+            ).json()
+
+            elements = res.get("elements", [])
+
+            c = 1
+
+            for item in elements[:10]:
+
+                tags = item.get("tags", {})
+
+                hospitals.append({
+
+                    "name": tags.get(
+                        "name",
+                        f"Govt Hospital {c}"
+                    ),
+
+                    "address": tags.get(
+                        "addr:street",
+                        city
+                    ),
+
+                    "phone": tags.get(
+                        "phone",
+                        "Visit Hospital"
+                    )
+
+                })
+
+                c += 1
+
+    except:
+        pass
+
+    # =================================================
+    # FALLBACK IF API FAILS
+    # =================================================
+    if len(hospitals) == 0:
+
+        hospitals = [
+
+            {
+                "name":"Civil Hospital",
+                "address":city,
+                "phone":"+91 Available"
+            },
+
+            {
+                "name":"District Govt Hospital",
+                "address":city,
+                "phone":"+91 Available"
+            },
+
+            {
+                "name":"Multi Speciality Centre",
+                "address":city,
+                "phone":"+91 Available"
+            }
+
+        ]
+
+    # =================================================
+    # RESULT PAGE
+    # =================================================
+    return render_template(
+
+        "scheme_result.html",
+
+        city=city,
+        scheme=scheme,
+        treatment=treatment,
+
+        hospitals=hospitals,
+
+        insurance=insurance,
+        eligibility=eligibility,
+        documents=documents,
+        treatments=treatments
+    )
+    
 # ==================================================
 # DASHBOARD
 # ==================================================

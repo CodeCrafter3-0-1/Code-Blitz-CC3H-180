@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Scheme Results | HealthGuard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root{
+--primary:#06b6d4;
+--secondary:#2563eb;
+--success:#22c55e;
+--danger:#ef4444;
+--violet:#8b5cf6;
+--dark:#0f172a;
+--text:#475569;
+}
+
+/* PAGE */
+.result-page{
+padding:28px;
+animation:fadeUp .9s ease;
+}
+
+/* TOP HERO */
+.top-box{
+position:relative;
+background:rgba(255,255,255,.80);
+backdrop-filter:blur(16px);
+padding:28px;
+border-radius:24px;
+overflow:hidden;
+box-shadow:0 20px 45px rgba(0,0,0,.08);
+margin-bottom:24px;
+}
+
+.top-box::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:24px;
+background:linear-gradient(135deg,var(--primary),var(--secondary),var(--violet));
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+}
+
+.top-box h1{
+font-size:34px;
+font-weight:900;
+margin-bottom:10px;
+color:var(--dark);
+}
+
+.top-box p{
+font-size:16px;
+line-height:1.9;
+color:var(--text);
+}
+
+.top-actions{
+display:flex;
+gap:12px;
+margin-top:18px;
+flex-wrap:wrap;
+}
+
+.top-btn{
+padding:12px 18px;
+border-radius:15px;
+font-weight:800;
+text-decoration:none;
+background:#fff;
+border:1px solid #dbeafe;
+color:var(--dark);
+transition:.35s;
+}
+
+.top-btn:hover{
+transform:translateY(-4px);
+color:#2563eb;
+}
+
+/* GRID */
+.main-grid{
+display:grid;
+grid-template-columns:1.3fr .7fr;
+gap:24px;
+}
+
+/* HOSPITAL CARD */
+.card{
+background:rgba(255,255,255,.82);
+padding:24px;
+border-radius:22px;
+box-shadow:0 16px 35px rgba(0,0,0,.06);
+margin-bottom:20px;
+transition:.35s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.card h3{
+font-size:20px;
+font-weight:900;
+margin-bottom:12px;
+color:var(--dark);
+}
+
+.card p{
+font-size:14px;
+line-height:1.9;
+color:var(--text);
+margin-bottom:8px;
+}
+
+.hospital-list{
+display:grid;
+gap:16px;
+}
+
+.hospital-item{
+padding:18px;
+border-radius:18px;
+background:#fff;
+border:1px solid #e0f2fe;
+transition:.35s;
+}
+
+.hospital-item:hover{
+transform:translateY(-4px);
+box-shadow:0 14px 28px rgba(0,0,0,.06);
+}
+
+.hospital-item h4{
+font-size:18px;
+font-weight:800;
+margin-bottom:8px;
+color:var(--dark);
+}
+
+.badge{
+display:inline-block;
+padding:7px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:800;
+margin-top:8px;
+background:#dcfce7;
+color:#166534;
+}
+
+/* RIGHT SIDE */
+.side-box{
+background:rgba(255,255,255,.82);
+padding:22px;
+border-radius:22px;
+box-shadow:0 14px 30px rgba(0,0,0,.06);
+margin-bottom:18px;
+}
+
+.side-box h3{
+font-size:18px;
+font-weight:900;
+margin-bottom:10px;
+color:var(--dark);
+}
+
+.side-box ul{
+padding-left:18px;
+}
+
+.side-box li{
+margin-bottom:8px;
+color:var(--text);
+font-size:14px;
+line-height:1.7;
+}
+
+/* BUTTONS */
+.apply-btn{
+display:block;
+width:100%;
+height:54px;
+border:none;
+border-radius:18px;
+font-size:16px;
+font-weight:900;
+color:#fff;
+cursor:pointer;
+text-align:center;
+line-height:54px;
+text-decoration:none;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+box-shadow:0 16px 28px rgba(37,99,235,.20);
+transition:.35s;
+}
+
+.apply-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 24px 36px rgba(37,99,235,.28);
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(18px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+@media(max-width:980px){
+.main-grid{grid-template-columns:1fr;}
+.result-page{padding:16px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/govt-schemes" class="active-link">
+<i class="fa-solid fa-shield-heart"></i> Govt Schemes
+</a>
+
+<a href="/doctor">
+<i class="fa-solid fa-user-doctor"></i> Doctor Consultant
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="result-page">
+
+<div class="top-box">
+
+<h1>🏥 Scheme Search Results</h1>
+
+<p>
+Showing results for
+<strong>{{ scheme }}</strong>
+in
+<strong>{{ city }}</strong>
+for
+<strong>{{ treatment }}</strong>.
+</p>
+
+<div class="top-actions">
+
+<a href="/govt-schemes" class="top-btn">
+<i class="fa-solid fa-magnifying-glass"></i>
+ Search Again
+</a>
+
+<a href="/dashboard" class="top-btn">
+<i class="fa-solid fa-house"></i>
+ Dashboard
+</a>
+
+</div>
+
+</div>
+
+<div class="main-grid">
+
+<!-- LEFT -->
+<div>
+
+<div class="card">
+<h3>Nearby Empanelled Hospitals</h3>
+
+<div class="hospital-list">
+
+{% for hospital in hospitals %}
+
+<div class="hospital-item">
+
+<h4>{{ hospital.name }}</h4>
+
+<p>📍 {{ hospital.address }}</p>
+
+<p>📞 {{ hospital.phone }}</p>
+
+<span class="badge">
+Cashless Available
+</span>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div>
+
+<div class="side-box">
+<h3>💳 Insurance Cover</h3>
+<p style="color:#475569;line-height:1.8;">
+{{ insurance }}
+</p>
+</div>
+
+<div class="side-box">
+<h3>🩺 Free Treatments</h3>
+<ul>
+{% for item in treatments %}
+<li>{{ item }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="side-box">
+<h3>📄 Required Documents</h3>
+<ul>
+{% for doc in documents %}
+<li>{{ doc }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="side-box">
+<h3>✅ Eligibility</h3>
+<p style="color:#475569;line-height:1.8;">
+{{ eligibility }}
+</p>
+</div>
+
+<a href="/govt-schemes" class="apply-btn">
+Apply / Check Again
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

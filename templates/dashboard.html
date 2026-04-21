@@ -82,11 +82,9 @@ min-height:100vh;
 .sidebar{
 width:280px;
 height:100vh;
-
 position:fixed;
 top:0;
 left:0;
-
 padding:16px;
 
 display:flex;
@@ -95,22 +93,105 @@ flex-direction:column;
 background:rgba(255,255,255,.45);
 backdrop-filter:blur(18px);
 border-right:1px solid rgba(255,255,255,.35);
+box-shadow:0 8px 30px rgba(0,0,0,.06);
+z-index:999;
 
+overflow:hidden; /* outer no scroll */
+}
+
+/* logo top fixed */
+.sidebar-logo{
+flex-shrink:0;
+margin-bottom:14px;
+}
+
+/* NAV BUTTONS AREA SCROLLABLE */
+.menu-links{
+flex:1;
+min-height:0;
+
+overflow-y:auto;
+overflow-x:hidden;
+
+display:flex;
+flex-direction:column;
+gap:12px;
+
+padding-right:6px;
+padding-bottom:10px;
+}
+
+/* scrollbar */
+.menu-links::-webkit-scrollbar{
+width:6px;
+}
+
+.menu-links::-webkit-scrollbar-thumb{
+background:linear-gradient(#06b6d4,#2563eb);
+border-radius:20px;
+}
+
+.menu-links::-webkit-scrollbar-track{
+background:transparent;
+}
+
+/* logout always bottom fixed */
+.side-logout{
+flex-shrink:0;
+margin-top:12px;
+}
+yeha pr ek scrollable add krwa de taki scroll krne pr upper aaye nav bars ok
+
+/* ===== LEFT SIDEBAR FINAL SCROLL FIX ===== */
+
+.sidebar{
+width:280px;
+height:100vh;
+position:fixed;
+top:0;
+left:0;
+padding:16px;
+
+display:flex;
+flex-direction:column;
+
+background:rgba(255,255,255,.45);
+backdrop-filter:blur(18px);
+border-right:1px solid rgba(255,255,255,.35);
 box-shadow:0 8px 30px rgba(0,0,0,.06);
 z-index:999;
 
 overflow:hidden;
 }
 
-/* Logo fixed */
+/* logo fixed */
 .sidebar-logo{
-padding:18px;
-border-radius:20px;
-background:rgba(255,255,255,.35);
-margin-bottom:14px;
 flex-shrink:0;
+margin-bottom:14px;
 }
 
+/* IMPORTANT: wrapper scroll */
+.sidebar > div{
+flex:1;
+min-height:0;
+overflow-y:auto;
+overflow-x:hidden;
+padding-right:6px;
+}
+
+/* scrollbar */
+.sidebar > div::-webkit-scrollbar{
+width:6px;
+}
+
+.sidebar > div::-webkit-scrollbar-thumb{
+background:linear-gradient(#06b6d4,#2563eb);
+border-radius:20px;
+}
+
+.sidebar > div::-webkit-scrollbar-track{
+background:transparent;
+}
 /* Scroll area */
 .menu-links{
 flex:1;
@@ -120,11 +201,12 @@ overflow-x:hidden;
 
 padding-right:6px;
 margin-bottom:14px;
-
+padding-bottom:10px;
 display:flex;
 flex-direction:column;
 gap:12px;
 }
+
 
 /* scrollbar */
 .menu-links::-webkit-scrollbar{
@@ -172,7 +254,7 @@ font-weight:800;
 
 background:linear-gradient(135deg,#ef4444,#dc2626);
 color:#fff;
-
+margin-top:12px;
 box-shadow:0 10px 18px rgba(239,68,68,.22);
 transition:.3s;
 }
@@ -578,6 +660,11 @@ left:0;
 <a href="/doctor">
 <i class="fa-solid fa-user-doctor"></i>
 <span>Doctor Consultant</span>
+</a>
+
+<a href="/govt-schemes">
+<i class="fa-solid fa-shield-heart"></i>
+Govt Schemes
 </a>
 
 <a href="/chatbot">
