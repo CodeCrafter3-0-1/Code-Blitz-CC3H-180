@@ -13,85 +13,180 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
+:root{
+--primary:#06b6d4;
+--secondary:#2563eb;
+--success:#22c55e;
+--violet:#8b5cf6;
+--warning:#f59e0b;
+--dark:#0f172a;
+--text:#475569;
+--white:#ffffff;
 }
 
-body{
-background:linear-gradient(135deg,#eff6ff,#f8fafc,#dff6f0);
-color:#0f172a;
-overflow-x:hidden;
-}
-
+/* PAGE */
 .results-page{
 padding:28px;
-animation:fadeUp .8s ease;
+animation:fadeUp .9s ease;
+position:relative;
+z-index:2;
 }
 
+/* TOP BOX */
 .top-box{
+position:relative;
 background:rgba(255,255,255,.78);
 backdrop-filter:blur(14px);
 padding:28px;
 border-radius:24px;
-border:1px solid rgba(255,255,255,.45);
-box-shadow:0 20px 45px rgba(0,0,0,.08);
-margin-bottom:24px;
-position:relative;
 overflow:hidden;
+box-shadow:
+0 20px 45px rgba(0,0,0,.08),
+0 8px 18px rgba(37,99,235,.05);
+margin-bottom:24px;
+transition:.35s ease;
 }
 
-.top-box:before{
+/* Gradient Border */
+.top-box::before{
 content:"";
 position:absolute;
 inset:0;
-padding:1px;
+padding:1.2px;
 border-radius:24px;
-background:linear-gradient(135deg,#06b6d4,#2563eb,#22c55e,#8b5cf6);
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--success),
+var(--violet)
+);
 -webkit-mask:
 linear-gradient(#fff 0 0) content-box,
 linear-gradient(#fff 0 0);
 -webkit-mask-composite:xor;
 mask-composite:exclude;
-opacity:.75;
+opacity:.95;
+pointer-events:none;
+}
+
+.top-box:hover{
+transform:translateY(-5px);
+box-shadow:
+0 28px 50px rgba(0,0,0,.10),
+0 14px 26px rgba(37,99,235,.08);
 }
 
 .top-box h1{
 font-size:34px;
+font-weight:900;
+letter-spacing:-.4px;
+color:var(--dark);
 margin-bottom:12px;
 }
 
 .top-box p{
 font-size:16px;
-line-height:1.8;
-color:#475569;
+line-height:1.9;
+color:var(--text);
 }
 
+/* ACTION BUTTONS */
+.top-actions{
+display:flex;
+gap:12px;
+margin-top:20px;
+flex-wrap:wrap;
+}
+
+.top-btn{
+position:relative;
+padding:12px 20px;
+border-radius:16px;
+font-weight:800;
+text-decoration:none;
+background:#fff;
+border:1px solid #dbeafe;
+color:var(--dark);
+overflow:hidden;
+transition:.35s ease;
+box-shadow:0 10px 18px rgba(0,0,0,.04);
+}
+
+.top-btn::before{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:70%;
+height:100%;
+background:linear-gradient(
+90deg,
+transparent,
+rgba(37,99,235,.14),
+transparent
+);
+transition:.65s;
+}
+
+.top-btn:hover::before{
+left:130%;
+}
+
+.top-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 18px 28px rgba(37,99,235,.12);
+color:#2563eb;
+}
+
+/* GRID */
 .result-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
 gap:22px;
 }
 
+/* CARD */
 .doc-card{
-background:rgba(255,255,255,.78);
-backdrop-filter:blur(14px);
+position:relative;
+background:rgba(255,255,255,.82);
+backdrop-filter:blur(12px);
 padding:24px;
 border-radius:22px;
-border:1px solid rgba(255,255,255,.45);
-box-shadow:0 18px 40px rgba(0,0,0,.07);
-transition:.35s;
-position:relative;
 overflow:hidden;
+box-shadow:
+0 18px 40px rgba(0,0,0,.07);
+transition:.38s ease;
+}
+
+.doc-card::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:22px;
+background:linear-gradient(
+135deg,
+rgba(6,182,212,.9),
+rgba(37,99,235,.9),
+rgba(139,92,246,.8)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.92;
 }
 
 .doc-card:hover{
-transform:translateY(-6px);
-box-shadow:0 26px 48px rgba(0,0,0,.12);
+transform:translateY(-8px) scale(1.01);
+box-shadow:
+0 28px 48px rgba(0,0,0,.11),
+0 16px 26px rgba(37,99,235,.08);
 }
 
+/* HEAD */
 .doc-head{
 display:flex;
 align-items:center;
@@ -99,52 +194,65 @@ gap:14px;
 margin-bottom:18px;
 }
 
+/* AVATAR */
 .doc-avatar{
-width:64px;
-height:64px;
+width:68px;
+height:68px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:24px;
 color:#fff;
-background:linear-gradient(135deg,#06b6d4,#2563eb);
-box-shadow:0 12px 22px rgba(37,99,235,.22);
-animation:float 3s ease-in-out infinite;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+box-shadow:0 14px 24px rgba(37,99,235,.20);
+animation:floatIcon 3s ease-in-out infinite;
 }
 
 .doc-title h3{
-font-size:19px;
-margin-bottom:5px;
+font-size:20px;
+font-weight:800;
+color:var(--dark);
+margin-bottom:4px;
 }
 
 .doc-title span{
 font-size:13px;
+font-weight:600;
 color:#64748b;
 }
 
+/* META */
 .meta{
 display:grid;
-gap:10px;
+gap:11px;
 margin-bottom:18px;
 }
 
 .meta p{
 font-size:14px;
-line-height:1.7;
+font-weight:500;
 color:#334155;
+line-height:1.7;
 }
 
+/* EXPERIENCE TAG */
 .tag{
 display:inline-block;
-padding:7px 12px;
+padding:8px 14px;
 border-radius:999px;
 font-size:12px;
-font-weight:700;
+font-weight:800;
 background:#ecfeff;
 color:#0369a1;
+box-shadow:0 8px 16px rgba(6,182,212,.10);
 }
 
+/* BUTTON AREA */
 .btns{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -152,48 +260,117 @@ gap:12px;
 margin-top:18px;
 }
 
+/* COMMON BTN */
 .btn{
-height:46px;
+position:relative;
+height:48px;
 border:none;
-border-radius:14px;
+border-radius:15px;
 font-size:14px;
-font-weight:700;
+font-weight:800;
 cursor:pointer;
-transition:.3s;
-text-decoration:none;
 display:flex;
 align-items:center;
 justify-content:center;
+text-decoration:none;
+overflow:hidden;
+transition:.35s ease;
 }
 
+/* Shine */
+.btn::before{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:70%;
+height:100%;
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.35),
+transparent
+);
+transition:.65s;
+}
+
+.btn:hover::before{
+left:130%;
+}
+
+/* PRIMARY BTN */
 .btn-main{
-background:linear-gradient(135deg,#06b6d4,#2563eb);
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
 color:#fff;
+box-shadow:0 14px 22px rgba(37,99,235,.20);
 }
 
 .btn-main:hover{
-transform:translateY(-3px);
-box-shadow:0 14px 22px rgba(37,99,235,.25);
+transform:translateY(-4px);
+box-shadow:0 22px 32px rgba(37,99,235,.28);
 }
 
+/* LIGHT BTN */
 .btn-light{
 background:#fff;
 border:1px solid #dbeafe;
-color:#0f172a;
+color:var(--dark);
+box-shadow:0 10px 18px rgba(0,0,0,.04);
 }
 
 .btn-light:hover{
-transform:translateY(-3px);
+transform:translateY(-4px);
+box-shadow:0 18px 28px rgba(37,99,235,.10);
+color:#2563eb;
 }
 
+/* EMPTY STATE */
 .empty{
-padding:45px;
-background:#fff;
-border-radius:22px;
+position:relative;
+padding:50px;
+background:rgba(255,255,255,.82);
+border-radius:24px;
 text-align:center;
-box-shadow:0 14px 30px rgba(0,0,0,.06);
+box-shadow:0 18px 40px rgba(0,0,0,.07);
+overflow:hidden;
 }
 
+.empty::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:24px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--violet)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+}
+
+.empty h2{
+font-size:28px;
+font-weight:900;
+margin-bottom:10px;
+color:var(--dark);
+}
+
+.empty p{
+font-size:15px;
+color:var(--text);
+}
+
+/* ANIMATIONS */
 @keyframes fadeUp{
 from{
 opacity:0;
@@ -205,15 +382,12 @@ transform:translateY(0);
 }
 }
 
-@keyframes float{
-0%,100%{
-transform:translateY(0);
-}
-50%{
-transform:translateY(-8px);
-}
+@keyframes floatIcon{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-7px);}
 }
 
+/* MOBILE */
 @media(max-width:900px){
 
 .results-page{
@@ -224,12 +398,63 @@ padding:16px;
 grid-template-columns:1fr;
 }
 
+.top-box h1{
+font-size:28px;
+}
+
+.doc-title h3{
+font-size:18px;
+}
+
 }
 
 </style>
-
 </head>
+
 <body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="sidebar-top">
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/doctor" class="active-link">
+<i class="fa-solid fa-user-doctor"></i> Doctor Consultant
+</a>
+
+<a href="/my-appointments">
+<i class="fa-solid fa-calendar-check"></i> Appointments
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
 
 <div class="results-page">
 
@@ -244,6 +469,20 @@ in
 <strong>{{ city }}</strong>.
 Book consultation instantly.
 </p>
+
+<div class="top-actions">
+
+<a href="/doctor" class="top-btn">
+<i class="fa-solid fa-magnifying-glass"></i>
+ Search Again
+</a>
+
+<a href="/my-appointments" class="top-btn">
+<i class="fa-solid fa-calendar-check"></i>
+ My Appointments
+</a>
+
+</div>
 
 </div>
 
@@ -271,19 +510,16 @@ Book consultation instantly.
 <div class="meta">
 
 <p>
-<i class="fa-solid fa-star"></i>
-Rating:
+⭐ Rating:
 <strong>{{ doctor.rating }}</strong>
 </p>
 
 <p>
-<i class="fa-solid fa-location-dot"></i>
-{{ doctor.address }}
+📍 {{ doctor.address }}
 </p>
 
 <p>
-<i class="fa-solid fa-phone"></i>
-{{ doctor.phone }}
+📞 {{ doctor.phone }}
 </p>
 
 <span class="tag">
@@ -296,21 +532,11 @@ Rating:
 
 <form method="POST" action="/book-appointment">
 
-<input
-type="hidden"
-name="doctor_name"
-value="{{ doctor.name }}">
-
-<input
-type="hidden"
-name="speciality"
-value="{{ doctor.speciality }}">
+<input type="hidden" name="doctor_name" value="{{ doctor.name }}">
+<input type="hidden" name="speciality" value="{{ doctor.speciality }}">
 
 <button type="submit" class="btn btn-main">
-
-<i class="fa-solid fa-calendar-check"></i>
-&nbsp; Book
-
+Book Now
 </button>
 
 </form>
@@ -320,8 +546,7 @@ href="https://www.google.com/maps/search/{{ doctor.name }}"
 target="_blank"
 class="btn btn-light">
 
-<i class="fa-solid fa-map-location-dot"></i>
-&nbsp; Map
+Open Map
 
 </a>
 
@@ -339,14 +564,19 @@ class="btn btn-light">
 
 <h2>No Doctors Found</h2>
 
-<p>
-Try another disease, city or speciality.
-</p>
+<p>Try another disease, city or speciality.</p>
+
+<a href="/doctor" class="top-btn">
+Search Again
+</a>
 
 </div>
 
 {% endif %}
 
+</div>
+
+</main>
 </div>
 
 </body>

@@ -13,63 +13,100 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <style>
 
-.search-page{
-padding:30px;
-animation:fadeIn .8s ease;
+:root{
+--primary:#06b6d4;
+--secondary:#2563eb;
+--success:#22c55e;
+--violet:#8b5cf6;
+--dark:#0f172a;
+--text:#475569;
+--white:#ffffff;
 }
 
+/* PAGE */
+.search-page{
+padding:30px;
+animation:fadeIn .9s ease;
+position:relative;
+z-index:2;
+}
+
+/* GRID */
 .search-hero{
 display:grid;
 grid-template-columns:1.2fr .8fr;
 gap:25px;
 margin-bottom:28px;
+align-items:start;
 }
 
+/* MAIN BOX */
 .search-box-main{
-background:rgba(255,255,255,.72);
-backdrop-filter:blur(14px);
-border:1px solid rgba(255,255,255,.45);
-padding:28px;
-border-radius:24px;
-box-shadow:0 20px 45px rgba(0,0,0,.08);
 position:relative;
+background:rgba(255,255,255,.72);
+backdrop-filter:blur(16px);
+padding:30px;
+border-radius:26px;
 overflow:hidden;
+box-shadow:
+0 18px 40px rgba(0,0,0,.08),
+0 6px 18px rgba(37,99,235,.06);
+transition:.4s ease;
 }
 
-.search-box-main:before{
+/* GRADIENT BORDER */
+.search-box-main::before{
 content:"";
 position:absolute;
 inset:0;
-padding:1px;
-border-radius:24px;
-background:linear-gradient(135deg,#06b6d4,#3b82f6,#22c55e,#8b5cf6);
+padding:1.3px;
+border-radius:26px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--success),
+var(--violet)
+);
 -webkit-mask:
 linear-gradient(#fff 0 0) content-box,
 linear-gradient(#fff 0 0);
 -webkit-mask-composite:xor;
 mask-composite:exclude;
-opacity:.75;
+opacity:.95;
+pointer-events:none;
+}
+
+.search-box-main:hover{
+transform:translateY(-6px);
+box-shadow:
+0 26px 50px rgba(0,0,0,.12),
+0 14px 28px rgba(37,99,235,.12);
 }
 
 .search-box-main h1{
 font-size:34px;
+font-weight:800;
+color:var(--dark);
 margin-bottom:12px;
-color:#0f172a;
+letter-spacing:-.5px;
 }
 
 .search-box-main p{
 font-size:16px;
-line-height:1.8;
-color:#475569;
-margin-bottom:20px;
+line-height:1.9;
+color:var(--text);
+margin-bottom:22px;
 }
 
+/* FORM GRID */
 .form-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:18px;
 }
 
+/* INPUT WRAP */
 .input-wrap{
 display:flex;
 flex-direction:column;
@@ -79,114 +116,217 @@ gap:8px;
 .input-wrap label{
 font-size:14px;
 font-weight:700;
-color:#334155;
+color:var(--dark);
+padding-left:2px;
 }
 
+/* INPUTS */
 .input-wrap input,
 .input-wrap select{
-height:52px;
-border-radius:14px;
+height:54px;
+border-radius:16px;
 border:1px solid #dbeafe;
 padding:0 16px;
 font-size:15px;
 outline:none;
-transition:.3s;
-background:#fff;
+background:rgba(255,255,255,.95);
+transition:.35s ease;
+box-shadow:inset 0 0 0 transparent;
 }
 
 .input-wrap input:focus,
 .input-wrap select:focus{
-border-color:#0ea5e9;
-box-shadow:0 0 0 4px rgba(14,165,233,.12);
+border-color:var(--primary);
+box-shadow:
+0 0 0 4px rgba(6,182,212,.12),
+0 8px 18px rgba(37,99,235,.08);
+transform:translateY(-1px);
 }
 
+/* FULL ROW */
 .full-row{
 grid-column:1 / -1;
 }
 
+/* BUTTON */
 .search-btn{
-margin-top:6px;
 width:100%;
-height:54px;
+height:56px;
 border:none;
-border-radius:16px;
+border-radius:18px;
 font-size:16px;
-font-weight:700;
+font-weight:800;
 cursor:pointer;
 color:#fff;
-background:linear-gradient(135deg,#06b6d4,#2563eb);
-transition:.35s;
+letter-spacing:.3px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+box-shadow:
+0 16px 28px rgba(37,99,235,.20);
+transition:.35s ease;
+position:relative;
+overflow:hidden;
+}
+
+.search-btn::before{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:70%;
+height:100%;
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.35),
+transparent
+);
+transition:.6s;
+}
+
+.search-btn:hover::before{
+left:130%;
 }
 
 .search-btn:hover{
-transform:translateY(-3px);
-box-shadow:0 15px 25px rgba(37,99,235,.28);
+transform:translateY(-4px) scale(1.01);
+box-shadow:
+0 22px 35px rgba(37,99,235,.28);
 }
 
+.search-btn:active{
+transform:scale(.98);
+}
+
+/* SIDE INFO */
 .side-info{
 display:grid;
 gap:18px;
 }
 
+/* INFO CARD */
 .info-card{
-background:rgba(255,255,255,.72);
-backdrop-filter:blur(12px);
-border:1px solid rgba(255,255,255,.45);
-border-radius:22px;
+position:relative;
+background:rgba(255,255,255,.76);
+backdrop-filter:blur(14px);
 padding:22px;
-box-shadow:0 15px 35px rgba(0,0,0,.07);
-transition:.35s;
+border-radius:22px;
+overflow:hidden;
+box-shadow:
+0 15px 35px rgba(0,0,0,.07);
+transition:.35s ease;
+}
+
+.info-card::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:22px;
+background:linear-gradient(
+135deg,
+rgba(6,182,212,.8),
+rgba(37,99,235,.8),
+rgba(139,92,246,.8)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.9;
 }
 
 .info-card:hover{
-transform:translateY(-5px);
+transform:translateY(-6px);
+box-shadow:
+0 20px 42px rgba(0,0,0,.10);
 }
 
 .info-card h3{
 font-size:18px;
+font-weight:800;
 margin-bottom:10px;
-color:#0f172a;
+color:var(--dark);
 }
 
 .info-card p{
 font-size:14px;
 line-height:1.8;
-color:#475569;
+color:var(--text);
 }
 
+/* MINI STATS */
 .mini-stats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:18px;
-margin-top:22px;
+margin-top:24px;
 }
 
+/* MINI BOX */
 .mini-box{
-background:rgba(255,255,255,.72);
+position:relative;
+background:rgba(255,255,255,.75);
 backdrop-filter:blur(12px);
-padding:20px;
-border-radius:18px;
+padding:22px;
+border-radius:20px;
 text-align:center;
-border:1px solid rgba(255,255,255,.45);
-box-shadow:0 10px 25px rgba(0,0,0,.06);
-transition:.35s;
+overflow:hidden;
+box-shadow:
+0 14px 30px rgba(0,0,0,.06);
+transition:.35s ease;
+}
+
+.mini-box::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:20px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--success)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.9;
 }
 
 .mini-box:hover{
-transform:translateY(-5px);
+transform:translateY(-6px) scale(1.02);
+box-shadow:
+0 20px 40px rgba(0,0,0,.10);
 }
 
 .mini-box h2{
-font-size:28px;
-color:#0ea5e9;
+font-size:30px;
+font-weight:900;
 margin-bottom:8px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .mini-box p{
 font-size:14px;
-color:#64748b;
+font-weight:600;
+color:var(--text);
 }
 
+/* ANIMATION */
 @keyframes fadeIn{
 from{
 opacity:0;
@@ -198,7 +338,12 @@ transform:translateY(0);
 }
 }
 
+/* RESPONSIVE */
 @media(max-width:980px){
+
+.search-page{
+padding:18px;
+}
 
 .search-hero{
 grid-template-columns:1fr;
@@ -208,21 +353,27 @@ grid-template-columns:1fr;
 grid-template-columns:1fr;
 }
 
+.mini-stats{
+grid-template-columns:1fr;
+}
+
+.search-box-main h1{
+font-size:28px;
+}
+
 }
 
 </style>
-
 </head>
-<body>
 
-<div class="bg-blur one"></div>
-<div class="bg-blur two"></div>
-<div class="bg-blur three"></div>
+<body>
 
 <div class="dashboard-container">
 
 <!-- SIDEBAR -->
-<aside class="sidebar premium-sidebar">
+<aside class="sidebar">
+
+<div class="sidebar-top">
 
 <div class="sidebar-logo">
 <h2>🩺 HealthGuard</h2>
@@ -240,19 +391,19 @@ grid-template-columns:1fr;
 </a>
 
 <a href="/report">
-<i class="fa-solid fa-file-waveform"></i> Report Analysis
+<i class="fa-solid fa-file-medical"></i> Report Analysis
 </a>
 
 <a href="/doctor" class="active-link">
-<i class="fa-solid fa-user-doctor"></i> Doctors
+<i class="fa-solid fa-user-doctor"></i> Doctor Consultant
 </a>
 
 <a href="/my-appointments">
 <i class="fa-solid fa-calendar-check"></i> Appointments
 </a>
 
-<a href="/ambulance">
-<i class="fa-solid fa-truck-medical"></i> Ambulance
+<a href="/chatbot">
+<i class="fa-solid fa-robot"></i> AI Chatbot
 </a>
 
 <a href="/profile">
@@ -261,9 +412,10 @@ grid-template-columns:1fr;
 
 </nav>
 
+</div>
+
 <a href="/logout" class="side-logout">
-<i class="fa-solid fa-right-from-bracket"></i>
-Logout
+<i class="fa-solid fa-right-from-bracket"></i> Logout
 </a>
 
 </aside>
@@ -272,10 +424,8 @@ Logout
 <main class="main-content">
 
 <div class="dashboard-top">
-<div>
 <h1>🩺 Doctor Consultant</h1>
-<p>Search top specialists, nearby clinics and book appointments instantly.</p>
-</div>
+<p>Find top specialists, nearby clinics and book appointments instantly.</p>
 </div>
 
 <div class="search-page">
@@ -288,7 +438,7 @@ Logout
 <h1>Find Best Doctors Near You</h1>
 
 <p>
-Search by disease, speciality or city and get AI-powered healthcare consultation support.
+Search by disease, speciality or city and get trusted healthcare consultation support.
 </p>
 
 <form method="POST" action="/search-doctor">
@@ -297,17 +447,15 @@ Search by disease, speciality or city and get AI-powered healthcare consultation
 
 <div class="input-wrap">
 <label>Disease / Problem</label>
-<input
-type="text"
-name="disease"
-placeholder="Ex: Heart Problem / Sugar / Skin"
+<input type="text" name="disease"
+placeholder="Ex: Heart / Sugar / Skin"
 required>
 </div>
 
 <div class="input-wrap">
 <label>Speciality</label>
 <select name="speciality" required>
-<option value="">Select Speciality</option>
+<option value="">Select</option>
 <option>Cardiologist</option>
 <option>Dermatologist</option>
 <option>Neurologist</option>
@@ -321,10 +469,8 @@ required>
 
 <div class="input-wrap full-row">
 <label>City / Area</label>
-<input
-type="text"
-name="city"
-placeholder="Enter your city / area"
+<input type="text" name="city"
+placeholder="Enter city"
 required>
 </div>
 
@@ -346,23 +492,17 @@ Search Doctors
 
 <div class="info-card">
 <h3>⭐ Trusted Specialists</h3>
-<p>
-Find verified doctors with ratings, reviews and top speciality support.
-</p>
+<p>Verified doctors with good ratings.</p>
 </div>
 
 <div class="info-card">
 <h3>📍 Nearby Search</h3>
-<p>
-Get nearby clinics and hospitals based on your city and location.
-</p>
+<p>Doctors based on your city and area.</p>
 </div>
 
 <div class="info-card">
-<h3>📅 Instant Booking</h3>
-<p>
-Book your consultation in seconds with premium appointment flow.
-</p>
+<h3>📅 Quick Booking</h3>
+<p>Book appointment instantly.</p>
 </div>
 
 </div>
@@ -373,13 +513,13 @@ Book your consultation in seconds with premium appointment flow.
 <div class="mini-stats">
 
 <div class="mini-box">
-<h2>500+</h2>
+<h2>{{ total_doctors if total_doctors else "500+" }}</h2>
 <p>Doctors Listed</p>
 </div>
 
 <div class="mini-box">
-<h2>24/7</h2>
-<p>Support Active</p>
+<h2>{{ total_appointments if total_appointments else "24/7" }}</h2>
+<p>Appointments</p>
 </div>
 
 <div class="mini-box">
@@ -395,14 +535,10 @@ Book your consultation in seconds with premium appointment flow.
 </div>
 
 <script>
-
 document.querySelector("form").addEventListener("submit",function(){
-
 document.querySelector(".search-btn").innerHTML =
 '<i class="fa-solid fa-spinner fa-spin"></i> Searching...';
-
 });
-
 </script>
 
 </body>

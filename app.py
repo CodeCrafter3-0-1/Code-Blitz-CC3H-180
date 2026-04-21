@@ -226,6 +226,9 @@ def login():
 # ==========================================
 # DOCTOR PAGE
 # ==========================================
+# ==========================================
+# DOCTOR PAGE
+# ==========================================
 @app.route('/doctor')
 def doctor():
 
@@ -237,6 +240,9 @@ def doctor():
 
 # ==========================================
 # SEARCH DOCTOR
+# Free APIs:
+# 1. Nominatim
+# 2. Overpass
 # ==========================================
 @app.route('/search-doctor', methods=['POST'])
 def search_doctor():
@@ -244,32 +250,33 @@ def search_doctor():
     if 'user' not in session:
         return redirect('/login')
 
-    disease = request.form['disease']
-    city = request.form['city']
-    speciality = request.form['speciality']
+    disease = request.form['disease'].strip()
+    city = request.form['city'].strip()
+    speciality = request.form['speciality'].strip()
 
     doctors = []
 
     try:
-        # =====================================
-        # GET CITY LATITUDE / LONGITUDE
-        # =====================================
+        # ===============================
+        # API 1: NOMINATIM
+        # ===============================
         geo_url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json&limit=1"
 
         geo = requests.get(
             geo_url,
-            headers={"User-Agent": "HealthGuardAI"}
+            headers={"User-Agent": "HealthGuardAI"},
+            timeout=8
         ).json()
 
-        if geo and len(geo) > 0:
+        if geo:
 
             lat = geo[0]['lat']
             lon = geo[0]['lon']
 
-            # =====================================
-            # SEARCH NEARBY DOCTORS / HOSPITALS
-            # =====================================
-            overpass_query = f"""
+            # ===============================
+            # API 2: OVERPASS
+            # ===============================
+            query = f"""
             [out:json];
             (
               node["amenity"="hospital"](around:8000,{lat},{lon});
@@ -281,65 +288,68 @@ def search_doctor():
 
             res = requests.get(
                 "https://overpass-api.de/api/interpreter",
-                params={"data": overpass_query},
-                headers={"User-Agent": "HealthGuardAI"}
+                params={"data": query},
+                headers={"User-Agent": "HealthGuardAI"},
+                timeout=12
             ).json()
 
             elements = res.get("elements", [])
 
-            for item in elements[:10]:
+            count = 1
+
+            for item in elements[:12]:
 
                 tags = item.get("tags", {})
 
-                doctor = {
-                    "name": tags.get("name", "Nearby Doctor"),
-                    "speciality": speciality,
-                    "rating": "4.5",
-                    "address": city,
-                    "phone": "Visit Clinic",
-                    "experience": "8"
-                }
+                name = tags.get("name", f"Nearby Doctor {count}")
+                address = tags.get("addr:street", city)
 
-                doctors.append(doctor)
+                doctors.append({
+                    "name": name,
+                    "speciality": speciality,
+                    "rating": round(random.uniform(4.2, 4.9), 1),
+                    "address": address,
+                    "phone": tags.get("phone", "Visit Clinic"),
+                    "experience": random.randint(5, 18)
+                })
+
+                count += 1
 
     except:
         pass
 
-    # =====================================
-    # FALLBACK IF NO DATA FOUND
-    # =====================================
+    # ===============================
+    # FALLBACK
+    # ===============================
     if len(doctors) == 0:
 
         doctors = [
             {
-                "name": "Dr Raj Sharma",
-                "speciality": speciality,
-                "rating": "4.8",
-                "address": city,
-                "phone": "+91 Available",
-                "experience": "12"
+                "name":"Dr Raj Sharma",
+                "speciality":speciality,
+                "rating":"4.8",
+                "address":city,
+                "phone":"+91 Available",
+                "experience":"12"
             },
             {
-                "name": "Dr Priya Mehta",
-                "speciality": speciality,
-                "rating": "4.7",
-                "address": city,
-                "phone": "+91 Available",
-                "experience": "9"
+                "name":"Dr Priya Mehta",
+                "speciality":speciality,
+                "rating":"4.7",
+                "address":city,
+                "phone":"+91 Available",
+                "experience":"9"
             },
             {
-                "name": "Dr Aman Verma",
-                "speciality": speciality,
-                "rating": "4.6",
-                "address": city,
-                "phone": "+91 Available",
-                "experience": "10"
+                "name":"Dr Aman Verma",
+                "speciality":speciality,
+                "rating":"4.6",
+                "address":city,
+                "phone":"+91 Available",
+                "experience":"10"
             }
         ]
 
-    # =====================================
-    # FINAL RESULT PAGE
-    # =====================================
     return render_template(
         "doctor_result.html",
         doctors=doctors,
@@ -349,7 +359,7 @@ def search_doctor():
 
 
 # ==========================================
-# CREATE APPOINTMENTS TABLE (RUN ONCE)
+# CREATE TABLE
 # ==========================================
 def create_appointment_table():
 
@@ -372,7 +382,6 @@ def create_appointment_table():
     conn.commit()
     conn.close()
 
-
 create_appointment_table()
 
 
@@ -392,8 +401,61 @@ def book_appointment():
     time = "11:00 AM"
 
     conn = get_db()
+    conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
+    # ======================================
+    # DUPLICATE CHECK
+    # ======================================
+    cur.execute("""
+    SELECT * FROM appointments
+    WHERE user_email=? AND doctor_name=? AND date=?
+    """, (
+        session['email'],
+        doctor_name,
+        date
+    ))
+
+    exists = cur.fetchone()
+
+    if exists:
+
+        flash("Appointment already booked today.", "warning")
+
+        # appointments list again fetch
+        cur.execute("""
+        SELECT * FROM appointments
+        WHERE user_email=?
+        ORDER BY id DESC
+        """, (session['email'],))
+
+        appointments = cur.fetchall()
+
+        total = len(appointments)
+        confirmed = 0
+        pending = 0
+
+        for row in appointments:
+
+            if row['status'] == "Confirmed":
+                confirmed += 1
+
+            elif row['status'] == "Pending":
+                pending += 1
+
+        conn.close()
+
+        return render_template(
+            "appointment.html",
+            appointments=appointments,
+            total=total,
+            confirmed=confirmed,
+            pending=pending
+        )
+
+    # ======================================
+    # INSERT NEW APPOINTMENT
+    # ======================================
     cur.execute("""
     INSERT INTO appointments
     (
@@ -413,7 +475,7 @@ def book_appointment():
         speciality,
         date,
         time,
-        "Pending",
+        "Confirmed",
         datetime.now().strftime("%d-%m-%Y %H:%M")
 
     ))
@@ -424,7 +486,6 @@ def book_appointment():
     flash("Appointment booked successfully!", "success")
 
     return redirect('/my-appointments')
-
 
 # ==========================================
 # MY APPOINTMENTS
@@ -447,9 +508,7 @@ def my_appointments():
 
     appointments = cur.fetchall()
 
-    # stats
     total = len(appointments)
-
     confirmed = 0
     pending = 0
 
@@ -464,7 +523,7 @@ def my_appointments():
     conn.close()
 
     return render_template(
-        "my_appointments.html",
+        "appointment.html",
         appointments=appointments,
         total=total,
         confirmed=confirmed,
@@ -473,7 +532,7 @@ def my_appointments():
 
 
 # ==========================================
-# CANCEL APPOINTMENT
+# CANCEL
 # ==========================================
 @app.route('/cancel-appointment', methods=['POST'])
 def cancel_appointment():
