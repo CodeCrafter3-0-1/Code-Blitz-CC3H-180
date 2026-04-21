@@ -809,6 +809,224 @@ def search_scheme():
         treatments=treatments
     )
     
+
+# =====================================================
+# IMPORTS (top of app.py if not already added)
+# =====================================================
+import requests
+import random
+
+
+# =====================================================
+# MEDICINE SEARCH PAGE
+# =====================================================
+@app.route('/medicine')
+def medicine():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template("medicine.html")
+
+
+# =====================================================
+# MEDICINE RESULT PAGE
+# HYBRID SYSTEM:
+# 1. Internal DB
+# 2. OpenFDA API
+# 3. Random suggestions
+# =====================================================
+@app.route('/search-medicine', methods=['POST'])
+def search_medicine():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    medicine_name = request.form.get('medicine', '').strip()
+    category = request.form.get('category', '').strip()
+    symptoms = request.form.get('symptoms', '').strip()
+
+    query = medicine_name or symptoms or category
+
+    # =================================================
+    # INTERNAL MEDICINE DATABASE
+    # =================================================
+    db = {
+
+        "paracetamol": {
+            "name":"Paracetamol",
+            "type":"Fever Relief",
+            "usage":"Used for fever and mild pain.",
+            "dosage":"500mg after meal (general use).",
+            "price":"₹20 - ₹35",
+            "precaution":"Avoid overdose. Liver patients consult doctor.",
+            "eligible":"Adults & children as prescribed."
+        },
+
+        "dolo": {
+            "name":"Dolo 650",
+            "type":"Fever Relief",
+            "usage":"Used for fever, body pain, viral symptoms.",
+            "dosage":"650mg after meal.",
+            "price":"₹28 - ₹40",
+            "precaution":"Do not exceed recommended dose.",
+            "eligible":"Adults."
+        },
+
+        "metformin": {
+            "name":"Metformin",
+            "type":"Diabetes",
+            "usage":"Controls blood sugar levels.",
+            "dosage":"As prescribed after food.",
+            "price":"₹35 - ₹90",
+            "precaution":"Kidney patients consult doctor.",
+            "eligible":"Type 2 diabetic adults."
+        },
+
+        "amlodipine": {
+            "name":"Amlodipine",
+            "type":"BP Control",
+            "usage":"Used for high blood pressure.",
+            "dosage":"Once daily as prescribed.",
+            "price":"₹40 - ₹70",
+            "precaution":"Avoid sudden stopping.",
+            "eligible":"Adults."
+        },
+
+        "cetirizine": {
+            "name":"Cetirizine",
+            "type":"Allergy",
+            "usage":"Used for cold allergy and sneezing.",
+            "dosage":"Usually once daily.",
+            "price":"₹15 - ₹30",
+            "precaution":"May cause sleepiness.",
+            "eligible":"Adults & children as advised."
+        }
+
+    }
+
+    medicines = []
+
+    key = query.lower()
+
+    # =================================================
+    # INTERNAL MATCH
+    # =================================================
+    for item in db:
+
+        if item in key or key in item:
+
+            medicines.append(db[item])
+
+    # =================================================
+    # CATEGORY BASED AUTO SUGGESTIONS
+    # =================================================
+    if len(medicines) == 0:
+
+        if "fever" in key:
+            medicines.append(db["paracetamol"])
+            medicines.append(db["dolo"])
+
+        elif "sugar" in key or "diabetes" in key:
+            medicines.append(db["metformin"])
+
+        elif "bp" in key or "pressure" in key:
+            medicines.append(db["amlodipine"])
+
+        elif "cold" in key or "allergy" in key:
+            medicines.append(db["cetirizine"])
+
+    # =================================================
+    # OPENFDA API DATA
+    # =================================================
+    try:
+
+        api_url = f"https://api.fda.gov/drug/label.json?search=openfda.brand_name:{query}&limit=1"
+
+        res = requests.get(api_url, timeout=8).json()
+
+        results = res.get("results", [])
+
+        if results:
+
+            item = results[0]
+
+            medicines.append({
+
+                "name": item.get(
+                    "openfda",
+                    {}
+                ).get(
+                    "brand_name",
+                    ["Suggested Medicine"]
+                )[0],
+
+                "type":"FDA Suggested",
+
+                "usage": item.get(
+                    "purpose",
+                    ["General medicine use"]
+                )[0][:120],
+
+                "dosage": item.get(
+                    "dosage_and_administration",
+                    ["Use as directed by physician."]
+                )[0][:120],
+
+                "price":"₹" + str(random.randint(50,250)),
+
+                "precaution": item.get(
+                    "warnings",
+                    ["Consult doctor before use."]
+                )[0][:120],
+
+                "eligible":"As advised by doctor"
+
+            })
+
+    except:
+        pass
+
+    # =================================================
+    # IF STILL EMPTY
+    # =================================================
+    if len(medicines) == 0:
+
+        medicines = [
+
+            {
+                "name":"General Fever Tablet",
+                "type":"Suggested",
+                "usage":"General fever relief.",
+                "dosage":"As prescribed.",
+                "price":"₹25",
+                "precaution":"Consult doctor.",
+                "eligible":"Adults"
+            },
+
+            {
+                "name":"Pain Relief Tablet",
+                "type":"Suggested",
+                "usage":"Pain and headache relief.",
+                "dosage":"After food.",
+                "price":"₹30",
+                "precaution":"Avoid overdose.",
+                "eligible":"Adults"
+            }
+
+        ]
+
+    # =================================================
+    # RENDER PAGE
+    # =================================================
+    return render_template(
+
+        "medicine_result.html",
+
+        query=query,
+        medicines=medicines
+    )
+    
 # ==================================================
 # DASHBOARD
 # ==================================================

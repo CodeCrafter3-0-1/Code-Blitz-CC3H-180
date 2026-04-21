@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Medicine Results | HealthGuard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root{
+--primary:#06b6d4;
+--secondary:#2563eb;
+--violet:#8b5cf6;
+--success:#22c55e;
+--warning:#f59e0b;
+--danger:#ef4444;
+--dark:#0f172a;
+--text:#475569;
+}
+
+/* PAGE */
+.result-page{
+padding:28px;
+animation:fadeUp .9s ease;
+}
+
+/* TOP */
+.top-box{
+position:relative;
+background:rgba(255,255,255,.82);
+backdrop-filter:blur(16px);
+padding:28px;
+border-radius:26px;
+overflow:hidden;
+box-shadow:0 20px 45px rgba(0,0,0,.08);
+margin-bottom:24px;
+transition:.35s ease;
+}
+
+.top-box::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:26px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--violet)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+}
+
+.top-box:hover{
+transform:translateY(-5px);
+box-shadow:0 28px 52px rgba(0,0,0,.12);
+}
+
+.top-box h1{
+font-size:34px;
+font-weight:900;
+margin-bottom:10px;
+color:var(--dark);
+}
+
+.top-box p{
+font-size:16px;
+line-height:1.9;
+color:var(--text);
+}
+
+.top-actions{
+display:flex;
+gap:12px;
+margin-top:18px;
+flex-wrap:wrap;
+}
+
+.top-btn{
+padding:12px 18px;
+border-radius:16px;
+font-weight:800;
+text-decoration:none;
+background:#fff;
+border:1px solid #dbeafe;
+color:var(--dark);
+transition:.35s ease;
+}
+
+.top-btn:hover{
+transform:translateY(-4px);
+color:#2563eb;
+}
+
+/* GRID */
+.cards-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+/* MEDICINE CARD */
+.med-card{
+position:relative;
+background:rgba(255,255,255,.84);
+backdrop-filter:blur(14px);
+padding:22px;
+border-radius:22px;
+overflow:hidden;
+box-shadow:0 16px 35px rgba(0,0,0,.06);
+transition:.35s ease;
+}
+
+.med-card::before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:22px;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary),
+var(--violet)
+);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+}
+
+.med-card:hover{
+transform:translateY(-6px);
+box-shadow:0 28px 42px rgba(0,0,0,.10);
+}
+
+.card-head{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:16px;
+}
+
+.icon-box{
+width:58px;
+height:58px;
+border-radius:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+color:#fff;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+box-shadow:0 12px 20px rgba(37,99,235,.18);
+}
+
+.card-head h3{
+font-size:20px;
+font-weight:900;
+color:var(--dark);
+}
+
+.tag{
+display:inline-block;
+padding:7px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:800;
+background:#ecfeff;
+color:#0369a1;
+margin-top:6px;
+}
+
+.meta{
+display:grid;
+gap:10px;
+margin-top:14px;
+}
+
+.meta p{
+font-size:14px;
+line-height:1.8;
+color:#334155;
+}
+
+/* BUTTON */
+.card-btn{
+margin-top:18px;
+display:block;
+height:48px;
+line-height:48px;
+text-align:center;
+border-radius:16px;
+text-decoration:none;
+font-weight:900;
+color:#fff;
+background:linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+box-shadow:0 14px 24px rgba(37,99,235,.18);
+transition:.35s ease;
+}
+
+.card-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 22px 34px rgba(37,99,235,.28);
+}
+
+/* ALERT */
+.note-box{
+margin-top:24px;
+padding:20px;
+border-radius:22px;
+background:#fff7ed;
+border:1px solid #fed7aa;
+color:#9a3412;
+font-weight:700;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(18px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* MOBILE */
+@media(max-width:980px){
+
+.result-page{
+padding:16px;
+}
+
+.top-box h1{
+font-size:28px;
+}
+
+.cards-grid{
+grid-template-columns:1fr;
+}
+
+}
+
+.med-card::before,
+.card::before{
+pointer-events:none;
+}
+
+.card-btn{
+position:relative;
+z-index:20;
+cursor:pointer;
+pointer-events:auto;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/doctor">
+<i class="fa-solid fa-user-doctor"></i> Doctor Consultant
+</a>
+
+<a href="/govt-schemes">
+<i class="fa-solid fa-shield-heart"></i> Govt Schemes
+</a>
+
+<a href="/medicine" class="active-link">
+<i class="fa-solid fa-capsules"></i> Medicine Finder
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="result-page">
+
+<div class="top-box">
+
+<h1>💊 Medicine Results</h1>
+
+<p>
+Showing results for
+<strong>{{ query }}</strong>
+with smart dosage, price and precautions.
+</p>
+
+<div class="top-actions">
+
+<a href="/medicine" class="top-btn">
+<i class="fa-solid fa-magnifying-glass"></i>
+ Search Again
+</a>
+
+<a href="/dashboard" class="top-btn">
+<i class="fa-solid fa-house"></i>
+ Dashboard
+</a>
+
+</div>
+
+</div>
+
+<!-- RESULT GRID -->
+<div class="cards-grid">
+
+{% for med in medicines %}
+
+<div class="med-card">
+
+<div class="card-head">
+
+<div class="icon-box">
+<i class="fa-solid fa-capsules"></i>
+</div>
+
+<div>
+<h3>{{ med.name }}</h3>
+<span class="tag">{{ med.type }}</span>
+</div>
+
+</div>
+
+<div class="meta">
+
+<p><strong>Use:</strong> {{ med.usage }}</p>
+
+<p><strong>Dosage:</strong> {{ med.dosage }}</p>
+
+<p><strong>Price:</strong> {{ med.price }}</p>
+
+<p><strong>Precaution:</strong> {{ med.precaution }}</p>
+
+<p><strong>Eligible:</strong> {{ med.eligible }}</p>
+
+</div>
+
+<a href="/doctor" class="card-btn">
+<i class="fa-solid fa-user-doctor"></i>
+ Consult Doctor
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<div class="note-box">
+⚠ This information is for awareness only. Please consult a doctor before taking any medicine.
+</div>
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>
