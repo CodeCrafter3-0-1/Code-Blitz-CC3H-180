@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Register | Health Guard AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px;
+background:
+radial-gradient(circle at top left,#dbeafe 0%,transparent 35%),
+radial-gradient(circle at bottom right,#bbf7d0 0%,transparent 35%),
+linear-gradient(135deg,#eef7ff,#f8fbff,#e8fff5);
+color:#0f172a;
+position:relative;
+overflow:auto;
+}
+
+/* FLOATING LIGHTS */
+
+body::before,
+body::after{
+content:"";
+position:absolute;
+width:320px;
+height:320px;
+border-radius:50%;
+filter:blur(90px);
+opacity:.35;
+z-index:0;
+animation:floatGlow 7s ease-in-out infinite alternate;
+}
+
+body::before{
+top:-100px;
+left:-80px;
+background:#38bdf8;
+}
+
+body::after{
+bottom:-100px;
+right:-80px;
+background:#22c55e;
+}
+
+@keyframes floatGlow{
+from{transform:translateY(0px);}
+to{transform:translateY(35px);}
+}
+
+/* ================= MAIN BOX ================= */
+
+.auth-page{
+width:100%;
+max-width:1380px;
+display:grid;
+grid-template-columns:1.08fr .92fr;
+background:rgba(255,255,255,.72);
+backdrop-filter:blur(20px);
+border-radius:30px;
+overflow:hidden;
+position:relative;
+z-index:2;
+margin:auto;
+box-shadow:0 25px 60px rgba(15,23,42,.10);
+border:2px solid transparent;
+background-image:
+linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
+linear-gradient(135deg,#38bdf8,#2563eb,#22c55e);
+background-origin:border-box;
+background-clip:padding-box,border-box;
+animation:fadeUp .8s ease;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(25px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* ================= LEFT SIDE ================= */
+
+.auth-left{
+padding:55px;
+background:linear-gradient(135deg,rgba(248,252,255,.95),rgba(238,247,255,.78));
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.brand-box h1{
+font-size:42px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.brand-tag{
+font-size:16px;
+color:#64748b;
+margin-bottom:42px;
+}
+
+.auth-left h2{
+font-size:42px;
+font-weight:800;
+line-height:1.3;
+margin-bottom:18px;
+}
+
+.auth-left h2 span{
+color:#0284c7;
+}
+
+.left-desc{
+font-size:18px;
+line-height:1.8;
+color:#475569;
+max-width:580px;
+margin-bottom:35px;
+}
+
+/* FEATURES */
+
+.feature-list{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-bottom:36px;
+}
+
+.feature-list span{
+background:rgba(255,255,255,.88);
+padding:16px 18px;
+border-radius:18px;
+display:flex;
+align-items:center;
+gap:12px;
+font-weight:600;
+transition:.3s;
+border:1px solid rgba(255,255,255,.7);
+box-shadow:0 8px 22px rgba(0,0,0,.04);
+}
+
+.feature-list span:hover{
+transform:translateY(-5px);
+box-shadow:0 15px 25px rgba(2,132,199,.14);
+}
+
+.feature-list i{
+color:#0284c7;
+font-size:18px;
+}
+
+/* STATS */
+
+.auth-stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:16px;
+}
+
+.auth-stat{
+background:rgba(255,255,255,.88);
+padding:22px;
+border-radius:18px;
+text-align:center;
+transition:.3s;
+box-shadow:0 8px 22px rgba(0,0,0,.04);
+}
+
+.auth-stat:hover{
+transform:translateY(-4px);
+}
+
+.auth-stat h3{
+font-size:28px;
+font-weight:800;
+color:#0284c7;
+margin-bottom:6px;
+}
+
+.auth-stat p{
+font-size:14px;
+color:#64748b;
+}
+
+/* ================= RIGHT SIDE ================= */
+
+.auth-right{
+display:flex;
+justify-content:center;
+align-items:center;
+padding:55px;
+background:rgba(255,255,255,.62);
+}
+
+.form-box{
+width:100%;
+max-width:500px;
+}
+
+.form-box h2{
+font-size:42px;
+font-weight:800;
+text-align:center;
+margin-bottom:10px;
+}
+
+.sub-text{
+text-align:center;
+font-size:16px;
+color:#64748b;
+line-height:1.6;
+margin-bottom:28px;
+}
+
+/* ALERT */
+
+.alert{
+padding:14px;
+border-radius:14px;
+font-size:14px;
+font-weight:600;
+margin-bottom:18px;
+}
+
+.alert.success{
+background:#dcfce7;
+color:#166534;
+}
+
+.alert.error{
+background:#fee2e2;
+color:#991b1b;
+}
+
+/* FORM */
+
+form{
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.input-group label{
+display:block;
+font-size:15px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+.input-group input{
+width:100%;
+padding:17px 18px;
+border-radius:15px;
+border:1px solid #dbeafe;
+background:#f8fbff;
+font-size:15px;
+outline:none;
+transition:.3s;
+}
+
+.input-group input:focus{
+border-color:#0284c7;
+background:#fff;
+transform:scale(1.01);
+box-shadow:0 0 0 4px rgba(2,132,199,.08);
+}
+
+/* BUTTON */
+
+.main-btn{
+border:none;
+cursor:pointer;
+padding:17px;
+border-radius:15px;
+font-size:16px;
+font-weight:700;
+background:linear-gradient(135deg,#0ea5e9,#2563eb);
+color:#fff;
+transition:.3s;
+margin-top:6px;
+box-shadow:0 12px 25px rgba(37,99,235,.20);
+}
+
+.main-btn:hover{
+transform:translateY(-4px) scale(1.02);
+box-shadow:0 18px 30px rgba(37,99,235,.28);
+}
+
+.main-btn:active{
+transform:scale(.97);
+}
+
+.full-btn{
+width:100%;
+}
+
+/* FOOTER */
+
+.bottom-text{
+margin-top:24px;
+text-align:center;
+font-size:15px;
+color:#64748b;
+}
+
+.bottom-text a{
+color:#0284c7;
+font-weight:700;
+text-decoration:none;
+transition:.3s;
+}
+
+.bottom-text a:hover{
+color:#2563eb;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1100px){
+
+body{
+padding:25px;
+}
+
+.auth-page{
+grid-template-columns:1fr;
+max-width:760px;
+}
+
+.auth-left,
+.auth-right{
+padding:35px;
+}
+
+}
+
+@media(max-width:700px){
+
+body{
+padding:15px;
+}
+
+.auth-left,
+.auth-right{
+padding:22px;
+}
+
+.brand-box h1{
+font-size:30px;
+}
+
+.auth-left h2,
+.form-box h2{
+font-size:28px;
+}
+
+.feature-list{
+grid-template-columns:1fr;
+}
+
+.auth-stats{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- ================= REGISTER PAGE ================= -->
+<div class="auth-page">
+
+<!-- LEFT SIDE -->
+<div class="auth-left">
+
+<div class="brand-box">
+<h1>🩺 HealthGuard AI</h1>
+<p class="brand-tag">
+Smart Healthcare Powered by AI
+</p>
+</div>
+
+<h2>
+Start Your <span>Healthy Journey</span>
+</h2>
+
+<p class="left-desc">
+Join thousands of users using AI to detect diseases early,
+analyze reports instantly and access emergency support faster.
+</p>
+
+<div class="feature-list">
+
+<span>
+<i class="fa-solid fa-heart-pulse"></i>
+AI Health Checkups
+</span>
+
+<span>
+<i class="fa-solid fa-file-medical"></i>
+Report Analysis
+</span>
+
+<span>
+<i class="fa-solid fa-truck-medical"></i>
+Emergency Care
+</span>
+
+<span>
+<i class="fa-solid fa-shield-heart"></i>
+Secure Records
+</span>
+
+</div>
+
+<div class="auth-stats">
+
+<div class="auth-stat">
+<h3>30K+</h3>
+<p>Trusted Users</p>
+</div>
+
+<div class="auth-stat">
+<h3>96%</h3>
+<p>AI Accuracy</p>
+</div>
+
+<div class="auth-stat">
+<h3>24/7</h3>
+<p>Support</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="auth-right">
+
+<div class="form-box">
+
+<h2>Create Account 🚀</h2>
+
+<p class="sub-text">
+Register now and begin your smart healthcare journey
+</p>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{category}}">
+{{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form method="POST">
+
+<div class="input-group">
+<label>Full Name</label>
+<input type="text"
+name="fullname"
+placeholder="Enter full name"
+required>
+</div>
+
+<div class="input-group">
+<label>Email Address</label>
+<input type="email"
+name="email"
+placeholder="Enter your email"
+required>
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password"
+name="password"
+placeholder="Create password"
+required>
+</div>
+
+<button type="submit" class="main-btn full-btn">
+Create Account
+</button>
+
+</form>
+
+<div class="bottom-text">
+Already have an account?
+<a href="/login">Login Here</a>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

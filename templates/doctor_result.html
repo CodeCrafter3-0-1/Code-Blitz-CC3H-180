@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Doctor Results | Health Guard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#eff6ff,#f8fafc,#dff6f0);
+color:#0f172a;
+overflow-x:hidden;
+}
+
+.results-page{
+padding:28px;
+animation:fadeUp .8s ease;
+}
+
+.top-box{
+background:rgba(255,255,255,.78);
+backdrop-filter:blur(14px);
+padding:28px;
+border-radius:24px;
+border:1px solid rgba(255,255,255,.45);
+box-shadow:0 20px 45px rgba(0,0,0,.08);
+margin-bottom:24px;
+position:relative;
+overflow:hidden;
+}
+
+.top-box:before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:24px;
+background:linear-gradient(135deg,#06b6d4,#2563eb,#22c55e,#8b5cf6);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.75;
+}
+
+.top-box h1{
+font-size:34px;
+margin-bottom:12px;
+}
+
+.top-box p{
+font-size:16px;
+line-height:1.8;
+color:#475569;
+}
+
+.result-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:22px;
+}
+
+.doc-card{
+background:rgba(255,255,255,.78);
+backdrop-filter:blur(14px);
+padding:24px;
+border-radius:22px;
+border:1px solid rgba(255,255,255,.45);
+box-shadow:0 18px 40px rgba(0,0,0,.07);
+transition:.35s;
+position:relative;
+overflow:hidden;
+}
+
+.doc-card:hover{
+transform:translateY(-6px);
+box-shadow:0 26px 48px rgba(0,0,0,.12);
+}
+
+.doc-head{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:18px;
+}
+
+.doc-avatar{
+width:64px;
+height:64px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+color:#fff;
+background:linear-gradient(135deg,#06b6d4,#2563eb);
+box-shadow:0 12px 22px rgba(37,99,235,.22);
+animation:float 3s ease-in-out infinite;
+}
+
+.doc-title h3{
+font-size:19px;
+margin-bottom:5px;
+}
+
+.doc-title span{
+font-size:13px;
+color:#64748b;
+}
+
+.meta{
+display:grid;
+gap:10px;
+margin-bottom:18px;
+}
+
+.meta p{
+font-size:14px;
+line-height:1.7;
+color:#334155;
+}
+
+.tag{
+display:inline-block;
+padding:7px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+background:#ecfeff;
+color:#0369a1;
+}
+
+.btns{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px;
+}
+
+.btn{
+height:46px;
+border:none;
+border-radius:14px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+text-decoration:none;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.btn-main{
+background:linear-gradient(135deg,#06b6d4,#2563eb);
+color:#fff;
+}
+
+.btn-main:hover{
+transform:translateY(-3px);
+box-shadow:0 14px 22px rgba(37,99,235,.25);
+}
+
+.btn-light{
+background:#fff;
+border:1px solid #dbeafe;
+color:#0f172a;
+}
+
+.btn-light:hover{
+transform:translateY(-3px);
+}
+
+.empty{
+padding:45px;
+background:#fff;
+border-radius:22px;
+text-align:center;
+box-shadow:0 14px 30px rgba(0,0,0,.06);
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(18px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes float{
+0%,100%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(-8px);
+}
+}
+
+@media(max-width:900px){
+
+.results-page{
+padding:16px;
+}
+
+.btns{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="results-page">
+
+<div class="top-box">
+
+<h1>👨‍⚕️ Doctor Search Results</h1>
+
+<p>
+Top recommended doctors for
+<strong>{{ disease }}</strong>
+in
+<strong>{{ city }}</strong>.
+Book consultation instantly.
+</p>
+
+</div>
+
+{% if doctors and doctors|length > 0 %}
+
+<div class="result-grid">
+
+{% for doctor in doctors %}
+
+<div class="doc-card">
+
+<div class="doc-head">
+
+<div class="doc-avatar">
+<i class="fa-solid fa-user-doctor"></i>
+</div>
+
+<div class="doc-title">
+<h3>{{ doctor.name }}</h3>
+<span>{{ doctor.speciality }}</span>
+</div>
+
+</div>
+
+<div class="meta">
+
+<p>
+<i class="fa-solid fa-star"></i>
+Rating:
+<strong>{{ doctor.rating }}</strong>
+</p>
+
+<p>
+<i class="fa-solid fa-location-dot"></i>
+{{ doctor.address }}
+</p>
+
+<p>
+<i class="fa-solid fa-phone"></i>
+{{ doctor.phone }}
+</p>
+
+<span class="tag">
+{{ doctor.experience }} Years Experience
+</span>
+
+</div>
+
+<div class="btns">
+
+<form method="POST" action="/book-appointment">
+
+<input
+type="hidden"
+name="doctor_name"
+value="{{ doctor.name }}">
+
+<input
+type="hidden"
+name="speciality"
+value="{{ doctor.speciality }}">
+
+<button type="submit" class="btn btn-main">
+
+<i class="fa-solid fa-calendar-check"></i>
+&nbsp; Book
+
+</button>
+
+</form>
+
+<a
+href="https://www.google.com/maps/search/{{ doctor.name }}"
+target="_blank"
+class="btn btn-light">
+
+<i class="fa-solid fa-map-location-dot"></i>
+&nbsp; Map
+
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">
+
+<h2>No Doctors Found</h2>
+
+<p>
+Try another disease, city or speciality.
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

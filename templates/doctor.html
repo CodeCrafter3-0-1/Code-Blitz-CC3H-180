@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Doctor Consultant | Health Guard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+.search-page{
+padding:30px;
+animation:fadeIn .8s ease;
+}
+
+.search-hero{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:25px;
+margin-bottom:28px;
+}
+
+.search-box-main{
+background:rgba(255,255,255,.72);
+backdrop-filter:blur(14px);
+border:1px solid rgba(255,255,255,.45);
+padding:28px;
+border-radius:24px;
+box-shadow:0 20px 45px rgba(0,0,0,.08);
+position:relative;
+overflow:hidden;
+}
+
+.search-box-main:before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:24px;
+background:linear-gradient(135deg,#06b6d4,#3b82f6,#22c55e,#8b5cf6);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.75;
+}
+
+.search-box-main h1{
+font-size:34px;
+margin-bottom:12px;
+color:#0f172a;
+}
+
+.search-box-main p{
+font-size:16px;
+line-height:1.8;
+color:#475569;
+margin-bottom:20px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+}
+
+.input-wrap{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.input-wrap label{
+font-size:14px;
+font-weight:700;
+color:#334155;
+}
+
+.input-wrap input,
+.input-wrap select{
+height:52px;
+border-radius:14px;
+border:1px solid #dbeafe;
+padding:0 16px;
+font-size:15px;
+outline:none;
+transition:.3s;
+background:#fff;
+}
+
+.input-wrap input:focus,
+.input-wrap select:focus{
+border-color:#0ea5e9;
+box-shadow:0 0 0 4px rgba(14,165,233,.12);
+}
+
+.full-row{
+grid-column:1 / -1;
+}
+
+.search-btn{
+margin-top:6px;
+width:100%;
+height:54px;
+border:none;
+border-radius:16px;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+color:#fff;
+background:linear-gradient(135deg,#06b6d4,#2563eb);
+transition:.35s;
+}
+
+.search-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 15px 25px rgba(37,99,235,.28);
+}
+
+.side-info{
+display:grid;
+gap:18px;
+}
+
+.info-card{
+background:rgba(255,255,255,.72);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,.45);
+border-radius:22px;
+padding:22px;
+box-shadow:0 15px 35px rgba(0,0,0,.07);
+transition:.35s;
+}
+
+.info-card:hover{
+transform:translateY(-5px);
+}
+
+.info-card h3{
+font-size:18px;
+margin-bottom:10px;
+color:#0f172a;
+}
+
+.info-card p{
+font-size:14px;
+line-height:1.8;
+color:#475569;
+}
+
+.mini-stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-top:22px;
+}
+
+.mini-box{
+background:rgba(255,255,255,.72);
+backdrop-filter:blur(12px);
+padding:20px;
+border-radius:18px;
+text-align:center;
+border:1px solid rgba(255,255,255,.45);
+box-shadow:0 10px 25px rgba(0,0,0,.06);
+transition:.35s;
+}
+
+.mini-box:hover{
+transform:translateY(-5px);
+}
+
+.mini-box h2{
+font-size:28px;
+color:#0ea5e9;
+margin-bottom:8px;
+}
+
+.mini-box p{
+font-size:14px;
+color:#64748b;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(18px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@media(max-width:980px){
+
+.search-hero{
+grid-template-columns:1fr;
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="bg-blur one"></div>
+<div class="bg-blur two"></div>
+<div class="bg-blur three"></div>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar premium-sidebar">
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/disease">
+<i class="fa-solid fa-brain"></i> Disease Prediction
+</a>
+
+<a href="/report">
+<i class="fa-solid fa-file-waveform"></i> Report Analysis
+</a>
+
+<a href="/doctor" class="active-link">
+<i class="fa-solid fa-user-doctor"></i> Doctors
+</a>
+
+<a href="/my-appointments">
+<i class="fa-solid fa-calendar-check"></i> Appointments
+</a>
+
+<a href="/ambulance">
+<i class="fa-solid fa-truck-medical"></i> Ambulance
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="dashboard-top">
+<div>
+<h1>🩺 Doctor Consultant</h1>
+<p>Search top specialists, nearby clinics and book appointments instantly.</p>
+</div>
+</div>
+
+<div class="search-page">
+
+<div class="search-hero">
+
+<!-- LEFT -->
+<div class="search-box-main">
+
+<h1>Find Best Doctors Near You</h1>
+
+<p>
+Search by disease, speciality or city and get AI-powered healthcare consultation support.
+</p>
+
+<form method="POST" action="/search-doctor">
+
+<div class="form-grid">
+
+<div class="input-wrap">
+<label>Disease / Problem</label>
+<input
+type="text"
+name="disease"
+placeholder="Ex: Heart Problem / Sugar / Skin"
+required>
+</div>
+
+<div class="input-wrap">
+<label>Speciality</label>
+<select name="speciality" required>
+<option value="">Select Speciality</option>
+<option>Cardiologist</option>
+<option>Dermatologist</option>
+<option>Neurologist</option>
+<option>Orthopedic</option>
+<option>ENT Specialist</option>
+<option>General Physician</option>
+<option>Diabetologist</option>
+<option>Pediatrician</option>
+</select>
+</div>
+
+<div class="input-wrap full-row">
+<label>City / Area</label>
+<input
+type="text"
+name="city"
+placeholder="Enter your city / area"
+required>
+</div>
+
+<div class="input-wrap full-row">
+<button type="submit" class="search-btn">
+<i class="fa-solid fa-magnifying-glass"></i>
+Search Doctors
+</button>
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+<!-- RIGHT -->
+<div class="side-info">
+
+<div class="info-card">
+<h3>⭐ Trusted Specialists</h3>
+<p>
+Find verified doctors with ratings, reviews and top speciality support.
+</p>
+</div>
+
+<div class="info-card">
+<h3>📍 Nearby Search</h3>
+<p>
+Get nearby clinics and hospitals based on your city and location.
+</p>
+</div>
+
+<div class="info-card">
+<h3>📅 Instant Booking</h3>
+<p>
+Book your consultation in seconds with premium appointment flow.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- STATS -->
+<div class="mini-stats">
+
+<div class="mini-box">
+<h2>500+</h2>
+<p>Doctors Listed</p>
+</div>
+
+<div class="mini-box">
+<h2>24/7</h2>
+<p>Support Active</p>
+</div>
+
+<div class="mini-box">
+<h2>96%</h2>
+<p>User Satisfaction</p>
+</div>
+
+</div>
+
+</div>
+
+</main>
+</div>
+
+<script>
+
+document.querySelector("form").addEventListener("submit",function(){
+
+document.querySelector(".search-btn").innerHTML =
+'<i class="fa-solid fa-spinner fa-spin"></i> Searching...';
+
+});
+
+</script>
+
+</body>
+</html>

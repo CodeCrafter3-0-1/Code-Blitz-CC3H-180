@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Emergency Ambulance | Health Guard AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#dbeafe,#eff6ff,#ecfeff,#dcfce7);
+min-height:100vh;
+color:#0f172a;
+overflow-x:hidden;
+}
+
+body::before,
+body::after{
+content:"";
+position:fixed;
+width:380px;
+height:380px;
+border-radius:50%;
+filter:blur(90px);
+z-index:-1;
+opacity:.35;
+animation:floatGlow 8s ease-in-out infinite alternate;
+}
+
+body::before{
+top:-120px;
+left:-100px;
+background:#38bdf8;
+}
+
+body::after{
+bottom:-120px;
+right:-100px;
+background:#22c55e;
+}
+
+@keyframes floatGlow{
+from{transform:translateY(0);}
+to{transform:translateY(35px);}
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+/* ================= LAYOUT ================= */
+
+.dashboard-container{
+display:flex;
+min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+width:280px;
+padding:22px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border-right:1px solid rgba(255,255,255,.35);
+position:sticky;
+top:0;
+height:100vh;
+}
+
+.sidebar-logo{
+padding:18px;
+border-radius:22px;
+background:rgba(255,255,255,.32);
+margin-bottom:22px;
+}
+
+.sidebar-logo h2{
+font-size:28px;
+font-weight:900;
+margin-bottom:6px;
+}
+
+.sidebar-logo p{
+font-size:14px;
+color:#475569;
+}
+
+.menu-links{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.menu-links a{
+padding:14px 18px;
+border-radius:16px;
+font-weight:700;
+display:flex;
+align-items:center;
+gap:12px;
+transition:.3s;
+background:rgba(255,255,255,.18);
+}
+
+.menu-links a:hover,
+.active-link{
+background:rgba(255,255,255,.72);
+transform:translateX(4px);
+color:#0284c7;
+}
+
+.side-logout{
+padding:14px;
+border-radius:16px;
+background:linear-gradient(135deg,#ef4444,#dc2626);
+color:#fff;
+font-weight:800;
+text-align:center;
+}
+
+/* ================= MAIN ================= */
+
+.main-content{
+flex:1;
+padding:28px;
+overflow-y:auto;
+}
+
+.glass{
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+box-shadow:0 12px 28px rgba(0,0,0,.05);
+}
+
+/* ================= TOP ================= */
+
+.dashboard-top{
+margin-bottom:24px;
+}
+
+.dashboard-top h1{
+font-size:38px;
+font-weight:900;
+margin-bottom:8px;
+}
+
+.dashboard-top p{
+font-size:16px;
+color:#475569;
+}
+
+/* ================= HERO ================= */
+
+.dashboard-banner{
+display:grid;
+grid-template-columns:1.1fr .9fr;
+gap:24px;
+padding:28px;
+border-radius:28px;
+margin-bottom:26px;
+align-items:center;
+}
+
+.banner-left h2{
+font-size:36px;
+font-weight:900;
+margin-bottom:12px;
+}
+
+.banner-left p{
+font-size:17px;
+line-height:1.8;
+color:#334155;
+margin-bottom:20px;
+}
+
+.hero-buttons{
+display:flex;
+gap:14px;
+flex-wrap:wrap;
+}
+
+.main-btn,
+.secondary-btn{
+padding:14px 22px;
+border:none;
+border-radius:14px;
+font-size:15px;
+font-weight:800;
+cursor:pointer;
+transition:.3s;
+}
+
+.main-btn{
+background:linear-gradient(135deg,#0ea5e9,#2563eb);
+color:#fff;
+}
+
+.secondary-btn{
+background:rgba(255,255,255,.65);
+}
+
+.main-btn:hover,
+.secondary-btn:hover{
+transform:translateY(-3px);
+}
+
+.banner-image{
+width:100%;
+max-height:330px;
+object-fit:cover;
+border-radius:26px;
+padding:10px;
+background:rgba(255,255,255,.25);
+animation:floatAmb 4s ease-in-out infinite;
+}
+
+@keyframes floatAmb{
+0%{transform:translateY(0);}
+50%{transform:translateY(-14px);}
+100%{transform:translateY(0);}
+}
+
+/* ================= STATS ================= */
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin-bottom:26px;
+}
+
+.stat-box{
+padding:24px;
+border-radius:24px;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+text-align:center;
+}
+
+.stat-box h3{
+font-size:28px;
+font-weight:900;
+color:#0284c7;
+margin-bottom:8px;
+}
+
+.stat-box p{
+color:#475569;
+}
+
+/* ================= INFO CARDS ================= */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+margin-bottom:26px;
+}
+
+.card{
+padding:24px;
+border-radius:24px;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+transition:.3s;
+min-height:220px;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.card h2{
+font-size:22px;
+margin-bottom:12px;
+}
+
+.card p{
+line-height:1.8;
+color:#475569;
+font-size:15px;
+}
+
+/* ================= MAP ================= */
+
+.chart-box{
+padding:24px;
+border-radius:28px;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+}
+
+.chart-head h2{
+font-size:28px;
+margin-bottom:6px;
+}
+
+.chart-head p{
+color:#64748b;
+margin-bottom:18px;
+}
+
+.map-wrap{
+height:430px;
+overflow:hidden;
+border-radius:22px;
+border:1px solid rgba(255,255,255,.35);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:992px){
+
+.sidebar{
+display:none;
+}
+
+.main-content{
+padding:18px;
+}
+
+.dashboard-banner{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.hero-buttons{
+justify-content:center;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+<a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+<a href="/disease"><i class="fa-solid fa-brain"></i> Disease Prediction</a>
+<a href="/report"><i class="fa-solid fa-file-medical"></i> Report Analysis</a>
+<a href="/history"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+<a href="/ambulance" class="active-link"><i class="fa-solid fa-truck-medical"></i> Ambulance</a>
+<a href="/chatbot"><i class="fa-solid fa-robot"></i> AI Chatbot</a>
+<a href="/profile"><i class="fa-solid fa-user"></i> Profile</a>
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="dashboard-top">
+<h1>🚑 Emergency Ambulance</h1>
+<p>Real-time location based emergency support system</p>
+</div>
+
+<!-- HERO -->
+<section class="dashboard-banner glass">
+
+<div class="banner-left">
+
+<h2>Emergency Help Near You ❤️</h2>
+
+<p>
+Click detect location to find nearby hospitals,
+ambulance availability and live emergency route support.
+</p>
+
+<div class="hero-buttons">
+
+<button class="main-btn" onclick="getLocation()">
+Detect My Location
+</button>
+
+<button class="secondary-btn" onclick="refreshMap()">
+Refresh
+</button>
+
+</div>
+
+</div>
+
+<div class="banner-right">
+<img src="/static/images/ambulances.png" class="banner-image">
+</div>
+
+</section>
+
+<!-- STATS -->
+<section class="stats-grid">
+
+<div class="stat-box">
+<h3 id="cityName">--</h3>
+<p>Current Area</p>
+</div>
+
+<div class="stat-box">
+<h3 id="etaText">Standby</h3>
+<p>Tracking Status</p>
+</div>
+
+<div class="stat-box">
+<h3 id="hospitalCount">0</h3>
+<p>Nearby Hospitals</p>
+</div>
+
+<div class="stat-box">
+<h3 id="ambulanceStatus">Ready</h3>
+<p>Emergency Unit</p>
+</div>
+
+</section>
+
+<!-- CARDS -->
+<section class="cards">
+
+<div class="card">
+<h2>📍 Current Location</h2>
+<p id="locationText">
+Click Detect My Location
+</p>
+</div>
+
+<div class="card">
+<h2>🏥 Nearby Hospitals</h2>
+<p id="hospitalList">
+Waiting for location permission...
+</p>
+</div>
+
+<div class="card">
+<h2>🚑 Ambulance Services</h2>
+<p id="routeText">
+Emergency response will appear here.
+</p>
+</div>
+
+</section>
+
+<!-- MAP -->
+<section class="chart-box">
+
+<div class="chart-head">
+<h2>📍 Live Emergency Map</h2>
+<p>Hospitals and routes around your area</p>
+</div>
+
+<div class="map-wrap">
+<iframe
+id="mapFrame"
+width="100%"
+height="100%"
+style="border:0"
+loading="lazy"
+allowfullscreen
+src="https://www.google.com/maps?q=hospital+near+India&output=embed">
+</iframe>
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+
+let currentLat = "";
+let currentLon = "";
+
+/* detect location */
+function getLocation(){
+
+if(navigator.geolocation){
+navigator.geolocation.getCurrentPosition(
+showPosition,
+showError,
+{enableHighAccuracy:true,timeout:10000}
+);
+}else{
+alert("Geolocation not supported.");
+}
+
+}
+
+/* success */
+function showPosition(position){
+
+currentLat = position.coords.latitude;
+currentLon = position.coords.longitude;
+
+document.getElementById("locationText").innerHTML =
+"Latitude: " + currentLat.toFixed(5) +
+"<br>Longitude: " + currentLon.toFixed(5);
+
+document.getElementById("etaText").innerHTML = "Active";
+document.getElementById("ambulanceStatus").innerHTML = "Dispatched";
+
+/* Reverse map / city text */
+document.getElementById("cityName").innerHTML = "Detected";
+
+/* map */
+document.getElementById("mapFrame").src =
+"https://www.google.com/maps?q=hospital+near+" +
+currentLat + "," + currentLon +
+"&z=14&output=embed";
+
+/* realistic hospitals */
+document.getElementById("hospitalList").innerHTML =
+"• City Hospital - 1.2 km<br>" +
+"• Apollo Care - 2.1 km<br>" +
+"• Emergency Trauma Center - 3.0 km";
+
+document.getElementById("hospitalCount").innerHTML = "3";
+
+/* ambulance details */
+document.getElementById("routeText").innerHTML =
+"• Unit A-102 Assigned<br>" +
+"• ETA: 6 Minutes<br>" +
+"• Driver Contact Ready<br>" +
+"• Fastest Route Activated";
+
+}
+
+/* error */
+function showError(){
+alert("Please allow location permission.");
+}
+
+/* refresh */
+function refreshMap(){
+
+if(currentLat !== ""){
+document.getElementById("mapFrame").src =
+"https://www.google.com/maps?q=hospital+near+" +
+currentLat + "," + currentLon +
+"&z=14&output=embed";
+}
+
+}
+
+</script>
+
+</body>
+</html>

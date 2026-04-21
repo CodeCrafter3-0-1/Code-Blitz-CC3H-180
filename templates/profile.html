@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Profile | Health Guard AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#dbeafe,#eff6ff,#ecfeff,#dcfce7);
+min-height:100vh;
+color:#0f172a;
+overflow-x:hidden;
+}
+
+/* glowing background */
+body::before,
+body::after{
+content:"";
+position:fixed;
+width:380px;
+height:380px;
+border-radius:50%;
+filter:blur(90px);
+opacity:.35;
+z-index:-1;
+animation:floatGlow 7s ease-in-out infinite alternate;
+}
+
+body::before{
+top:-100px;
+left:-120px;
+background:#38bdf8;
+}
+
+body::after{
+bottom:-100px;
+right:-120px;
+background:#22c55e;
+}
+
+@keyframes floatGlow{
+from{transform:translateY(0);}
+to{transform:translateY(35px);}
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+/* ================= LAYOUT ================= */
+
+.dashboard-container{
+display:flex;
+min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+width:280px;
+padding:22px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border-right:1px solid rgba(255,255,255,.35);
+position:sticky;
+top:0;
+height:100vh;
+}
+
+.sidebar-logo{
+padding:18px;
+border-radius:22px;
+background:rgba(255,255,255,.32);
+margin-bottom:22px;
+}
+
+.sidebar-logo h2{
+font-size:28px;
+font-weight:900;
+margin-bottom:6px;
+}
+
+.sidebar-logo p{
+font-size:14px;
+color:#475569;
+}
+
+.menu-links{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.menu-links a{
+padding:14px 18px;
+border-radius:16px;
+font-weight:700;
+display:flex;
+align-items:center;
+gap:12px;
+transition:.3s;
+background:rgba(255,255,255,.18);
+}
+
+.menu-links a:hover,
+.active-link{
+background:rgba(255,255,255,.72);
+transform:translateX(4px);
+color:#0284c7;
+}
+
+.side-logout{
+padding:14px;
+border-radius:16px;
+text-align:center;
+font-weight:800;
+color:#fff;
+background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+/* ================= MAIN ================= */
+
+.main-content{
+flex:1;
+padding:28px;
+overflow-y:auto;
+}
+
+.glass{
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+box-shadow:0 14px 30px rgba(0,0,0,.05);
+}
+
+/* ================= TOP ================= */
+
+.dashboard-top{
+margin-bottom:24px;
+}
+
+.dashboard-top h1{
+font-size:40px;
+font-weight:900;
+margin-bottom:8px;
+}
+
+.dashboard-top p{
+font-size:16px;
+color:#475569;
+}
+
+/* ================= HERO ================= */
+
+.dashboard-banner{
+display:grid;
+grid-template-columns:1.1fr .9fr;
+gap:25px;
+align-items:center;
+padding:28px;
+border-radius:28px;
+margin-bottom:28px;
+}
+
+.banner-left h2{
+font-size:38px;
+font-weight:900;
+margin-bottom:14px;
+}
+
+.banner-left p{
+font-size:17px;
+line-height:1.8;
+color:#334155;
+margin-bottom:20px;
+max-width:580px;
+}
+
+.banner-image{
+width:100%;
+max-height:320px;
+object-fit:cover;
+border-radius:26px;
+padding:10px;
+background:rgba(255,255,255,.25);
+animation:floatImg 4s ease-in-out infinite;
+}
+
+@keyframes floatImg{
+0%{transform:translateY(0);}
+50%{transform:translateY(-14px);}
+100%{transform:translateY(0);}
+}
+
+/* ================= BUTTONS ================= */
+
+.main-btn,
+.secondary-btn{
+display:inline-block;
+padding:14px 22px;
+border-radius:14px;
+font-size:15px;
+font-weight:800;
+transition:.3s;
+cursor:pointer;
+}
+
+.main-btn{
+background:linear-gradient(135deg,#0ea5e9,#2563eb);
+color:#fff;
+}
+
+.secondary-btn{
+background:rgba(255,255,255,.65);
+color:#0f172a;
+}
+
+.main-btn:hover,
+.secondary-btn:hover{
+transform:translateY(-4px) scale(1.02);
+box-shadow:0 12px 20px rgba(0,0,0,.08);
+}
+
+/* ================= PROFILE CARDS ================= */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+margin-bottom:28px;
+}
+
+.card{
+padding:24px;
+border-radius:24px;
+text-align:center;
+transition:.3s;
+min-height:240px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.card-img{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+border:5px solid rgba(255,255,255,.7);
+margin-bottom:16px;
+animation:pulse 3s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.05);}
+100%{transform:scale(1);}
+}
+
+.card h2{
+font-size:26px;
+margin-bottom:10px;
+word-break:break-word;
+}
+
+.card p{
+font-size:15px;
+line-height:1.8;
+color:#475569;
+word-break:break-word;
+}
+
+/* ================= STATUS GRID ================= */
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin-bottom:28px;
+}
+
+.stat-box{
+padding:24px;
+border-radius:24px;
+text-align:center;
+transition:.3s;
+}
+
+.stat-box:hover{
+transform:translateY(-5px);
+}
+
+.stat-box i{
+font-size:28px;
+color:#0284c7;
+margin-bottom:12px;
+}
+
+.stat-box h3{
+font-size:28px;
+font-weight:900;
+margin-bottom:8px;
+}
+
+.stat-box p{
+color:#475569;
+}
+
+/* ================= ACTION BOX ================= */
+
+.result-card{
+padding:28px;
+border-radius:28px;
+text-align:center;
+}
+
+.result-card h2{
+font-size:30px;
+margin-bottom:22px;
+}
+
+.result-buttons{
+display:flex;
+justify-content:center;
+gap:16px;
+flex-wrap:wrap;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:992px){
+
+.sidebar{
+display:none;
+}
+
+.main-content{
+padding:18px;
+}
+
+.dashboard-banner{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.banner-left p{
+margin:auto auto 20px;
+}
+
+.result-buttons{
+flex-direction:column;
+}
+
+.result-buttons a{
+width:100%;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare System</p>
+</div>
+
+<nav class="menu-links">
+<a href="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+<a href="/disease"><i class="fa-solid fa-brain"></i> Disease Prediction</a>
+<a href="/report"><i class="fa-solid fa-file-waveform"></i> Report Analysis</a>
+<a href="/history"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+<a href="/ambulance"><i class="fa-solid fa-truck-medical"></i> Ambulance</a>
+<a href="/profile" class="active-link"><i class="fa-solid fa-user"></i> Profile</a>
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">Logout</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="dashboard-top">
+<h1>👤 My Profile</h1>
+<p>Manage your personal healthcare account.</p>
+</div>
+
+<!-- HERO -->
+<div class="dashboard-banner glass">
+
+<div class="banner-left">
+
+<h2>Welcome, {{user['fullname']}} 👋</h2>
+
+<p>
+Your secure digital healthcare identity with Health Guard AI.
+Access smart medical tools, reports and emergency support anytime.
+</p>
+
+<a href="/dashboard" class="main-btn">
+Go Dashboard
+</a>
+
+</div>
+
+<div class="banner-right">
+<img src="/static/images/profile-user.png" class="banner-image">
+</div>
+
+</div>
+
+<!-- PROFILE CARDS -->
+<div class="cards">
+
+<div class="card glass">
+
+<img src="/static/images/user.png" class="card-img">
+
+<h2>{{user['fullname']}}</h2>
+<p>Registered Premium User</p>
+
+</div>
+
+<div class="card glass">
+
+<h2>📧 Email</h2>
+<p>{{user['email']}}</p>
+
+</div>
+
+<div class="card glass">
+
+<h2>📅 Joined Date</h2>
+<p>{{user['created_at']}}</p>
+
+</div>
+
+</div>
+
+<!-- STATUS -->
+<div class="stats-grid">
+
+<div class="stat-box glass">
+<i class="fa-solid fa-crown"></i>
+<h3>Premium</h3>
+<p>Membership</p>
+</div>
+
+<div class="stat-box glass">
+<i class="fa-solid fa-shield-heart"></i>
+<h3>Secure</h3>
+<p>Account Status</p>
+</div>
+
+<div class="stat-box glass">
+<i class="fa-solid fa-heart-pulse"></i>
+<h3>92%</h3>
+<p>Health Score</p>
+</div>
+
+<div class="stat-box glass">
+<i class="fa-solid fa-bolt"></i>
+<h3>Active</h3>
+<p>System Access</p>
+</div>
+
+</div>
+
+<!-- QUICK ACTIONS -->
+<div class="result-card glass">
+
+<h2>Quick Actions</h2>
+
+<div class="result-buttons">
+
+<a href="/report" class="main-btn">
+Upload Report
+</a>
+
+<a href="/disease" class="secondary-btn">
+Health Check
+</a>
+
+<a href="/ambulance" class="secondary-btn">
+Emergency Help
+</a>
+
+</div>
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

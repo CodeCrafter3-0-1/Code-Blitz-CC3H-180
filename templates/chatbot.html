@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Doctor Assistant | Health Guard AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#dbeafe,#eff6ff,#ecfeff,#dcfce7);
+min-height:100vh;
+color:#0f172a;
+overflow-x:hidden;
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+/* ================= LAYOUT ================= */
+
+.dashboard-container{
+display:flex;
+min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+width:280px;
+padding:22px;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border-right:1px solid rgba(255,255,255,.35);
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+position:sticky;
+top:0;
+height:100vh;
+}
+
+.sidebar-logo{
+padding:18px;
+border-radius:20px;
+background:rgba(255,255,255,.30);
+margin-bottom:24px;
+}
+
+.sidebar-logo h2{
+font-size:28px;
+font-weight:800;
+margin-bottom:6px;
+}
+
+.sidebar-logo p{
+font-size:14px;
+color:#475569;
+}
+
+.menu-links{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.menu-links a{
+padding:14px 18px;
+border-radius:16px;
+font-weight:700;
+display:flex;
+align-items:center;
+gap:12px;
+transition:.3s;
+background:rgba(255,255,255,.18);
+}
+
+.menu-links a:hover,
+.active-link{
+background:rgba(255,255,255,.70);
+color:#0284c7;
+transform:translateX(4px);
+}
+
+.side-logout{
+padding:14px;
+border-radius:16px;
+background:linear-gradient(135deg,#ef4444,#dc2626);
+color:#fff;
+font-weight:700;
+text-align:center;
+}
+
+/* ================= MAIN ================= */
+
+.main-content{
+flex:1;
+padding:28px;
+overflow-y:auto;
+}
+
+/* ================= TOP ================= */
+
+.dashboard-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+margin-bottom:24px;
+flex-wrap:wrap;
+}
+
+.dashboard-top h1{
+font-size:38px;
+font-weight:900;
+margin-bottom:6px;
+}
+
+.dashboard-top p{
+color:#475569;
+font-size:16px;
+}
+
+.top-user-box{
+display:flex;
+align-items:center;
+gap:14px;
+padding:12px 16px;
+border-radius:18px;
+background:rgba(255,255,255,.45);
+backdrop-filter:blur(14px);
+}
+
+.user-avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid rgba(255,255,255,.7);
+}
+
+/* ================= CHAT ================= */
+
+.chat-wrapper{
+max-width:900px;
+margin:auto;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+border-radius:28px;
+overflow:hidden;
+box-shadow:0 14px 30px rgba(0,0,0,.06);
+}
+
+.chat-header{
+padding:18px 24px;
+background:rgba(255,255,255,.45);
+font-weight:800;
+font-size:18px;
+display:flex;
+align-items:center;
+gap:12px;
+border-bottom:1px solid rgba(255,255,255,.35);
+}
+
+.chat-header i{
+color:#0284c7;
+font-size:22px;
+}
+
+.chat-body{
+height:520px;
+overflow-y:auto;
+padding:24px;
+display:flex;
+flex-direction:column;
+gap:16px;
+background:rgba(255,255,255,.18);
+}
+
+.chat-body::-webkit-scrollbar{
+width:6px;
+}
+
+.chat-body::-webkit-scrollbar-thumb{
+background:#94a3b8;
+border-radius:20px;
+}
+
+/* MESSAGES */
+
+.user-msg,
+.bot-msg{
+max-width:72%;
+padding:16px 18px;
+border-radius:18px;
+font-size:15px;
+line-height:1.8;
+word-break:break-word;
+animation:fadeIn .3s ease;
+}
+
+.user-msg{
+margin-left:auto;
+background:linear-gradient(135deg,#0ea5e9,#2563eb);
+color:#fff;
+border-bottom-right-radius:6px;
+}
+
+.bot-msg{
+background:#ffffff;
+color:#0f172a;
+border-bottom-left-radius:6px;
+box-shadow:0 8px 20px rgba(0,0,0,.04);
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(8px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* INPUT */
+
+.chat-form{
+display:flex;
+gap:12px;
+padding:18px;
+background:rgba(255,255,255,.38);
+border-top:1px solid rgba(255,255,255,.35);
+}
+
+.chat-form input{
+flex:1;
+padding:16px 18px;
+border:none;
+outline:none;
+border-radius:14px;
+background:#ffffff;
+font-size:15px;
+}
+
+.chat-form button{
+width:58px;
+border:none;
+border-radius:14px;
+cursor:pointer;
+font-size:18px;
+background:linear-gradient(135deg,#0ea5e9,#2563eb);
+color:#fff;
+transition:.3s;
+}
+
+.chat-form button:hover{
+transform:translateY(-2px);
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+max-width:900px;
+margin:28px auto 0;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+}
+
+.card{
+padding:22px;
+border-radius:24px;
+background:rgba(255,255,255,.42);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.35);
+box-shadow:0 12px 25px rgba(0,0,0,.05);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card h2{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.card p{
+color:#475569;
+line-height:1.7;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:992px){
+
+.sidebar{
+display:none;
+}
+
+.main-content{
+padding:18px;
+}
+
+.cards{
+grid-template-columns:1fr;
+}
+
+.chat-wrapper,
+.cards{
+max-width:100%;
+}
+
+.chat-body{
+height:460px;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/disease">
+<i class="fa-solid fa-brain"></i> Disease Prediction
+</a>
+
+<a href="/report">
+<i class="fa-solid fa-file-waveform"></i> Report Analysis
+</a>
+
+<a href="/ambulance">
+<i class="fa-solid fa-truck-medical"></i> Ambulance
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+<a href="/chatbot" class="active-link">
+<i class="fa-solid fa-robot"></i> AI Chatbot
+</a>
+
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<!-- TOP -->
+<div class="dashboard-top">
+
+<div>
+<h1>🤖 AI Doctor Assistant</h1>
+<p>Your smart hospital chatbot for instant health guidance</p>
+</div>
+
+<div class="top-user-box">
+<img src="/static/images/user.png" class="user-avatar">
+
+<div>
+<h4>{{session['user']}}</h4>
+<span>Online</span>
+</div>
+
+</div>
+
+</div>
+
+<!-- CHAT -->
+<div class="chat-wrapper">
+
+<div class="chat-header">
+<i class="fa-solid fa-robot"></i>
+<span>HealthGuard AI • Online</span>
+</div>
+
+<div class="chat-body" id="chatBody">
+
+{% if chats|length == 0 %}
+
+<div class="bot-msg">
+Hello {{session['user']}} 👋<br><br>
+
+I am your AI Doctor Assistant.<br><br>
+
+You can ask me:<br>
+• Fever<br>
+• Headache<br>
+• Cough<br>
+• Sugar<br>
+• BP<br>
+• Diet Plan<br>
+• Stress<br>
+• Emergency Help
+</div>
+
+{% endif %}
+
+{% for item in chats %}
+
+<div class="user-msg">
+{{item.user}}
+</div>
+
+<div class="bot-msg">
+{{item.bot}}
+</div>
+
+{% endfor %}
+
+</div>
+
+<form method="POST" class="chat-form">
+
+<input type="text"
+name="message"
+placeholder="Type symptoms or health question..."
+required
+autocomplete="off">
+
+<button type="submit">
+<i class="fa-solid fa-paper-plane"></i>
+</button>
+
+</form>
+
+</div>
+
+<!-- QUICK ACTIONS -->
+<div class="cards">
+
+<div class="card">
+<h2>🌡 Fever</h2>
+<p>Ask about fever treatment and daily care tips.</p>
+</div>
+
+<div class="card">
+<h2>❤️ BP</h2>
+<p>Know blood pressure guidance instantly.</p>
+</div>
+
+<div class="card">
+<h2>🥗 Diet</h2>
+<p>Healthy meal plans and nutrition advice.</p>
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+<script>
+const chatBody = document.getElementById("chatBody");
+chatBody.scrollTop = chatBody.scrollHeight;
+</script>
+
+<script>
+document.querySelector(".chat-form").addEventListener("submit", function(){
+document.querySelector(".chat-form button").innerHTML =
+'<i class="fa-solid fa-spinner fa-spin"></i>';
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prediction Result | Health Guard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+.result-pro-card{
+background:rgba(255,255,255,.78);
+backdrop-filter:blur(14px);
+border:1px solid rgba(255,255,255,.45);
+border-radius:22px;
+padding:22px;
+box-shadow:0 15px 40px rgba(0,0,0,.08);
+transition:.35s;
+animation:fadeUp .8s ease;
+}
+
+.result-pro-card:hover{
+transform:translateY(-6px);
+box-shadow:0 18px 45px rgba(0,0,0,.12);
+}
+
+.glow-border{
+position:relative;
+overflow:hidden;
+}
+
+.glow-border:before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:22px;
+background:linear-gradient(135deg,#06b6d4,#2563eb,#10b981,#8b5cf6);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.8;
+}
+
+.section-title{
+font-size:20px;
+font-weight:700;
+margin-bottom:14px;
+color:#0f172a;
+}
+
+.clean-list{
+line-height:2;
+color:#334155;
+font-size:15px;
+}
+
+.badge-chip{
+display:inline-block;
+padding:8px 14px;
+border-radius:999px;
+font-size:13px;
+font-weight:700;
+margin-top:10px;
+background:#eef2ff;
+color:#1e3a8a;
+}
+
+.food-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin-top:20px;
+}
+
+.food-box{
+padding:18px;
+border-radius:18px;
+background:rgba(255,255,255,.78);
+border:1px solid #e5e7eb;
+transition:.3s;
+}
+
+.food-box:hover{
+transform:translateY(-5px);
+}
+
+.food-box h3{
+font-size:17px;
+margin-bottom:10px;
+color:#0f172a;
+}
+
+.food-box p{
+font-size:14px;
+line-height:1.8;
+color:#475569;
+}
+
+.big-note{
+padding:20px;
+border-radius:20px;
+background:linear-gradient(135deg,#ecfeff,#eef2ff);
+border:1px solid #dbeafe;
+font-size:15px;
+line-height:1.9;
+color:#334155;
+margin-top:20px;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div>
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/disease" class="active-link">
+<i class="fa-solid fa-brain"></i> Disease Prediction
+</a>
+
+<a href="/report">
+<i class="fa-solid fa-file-medical"></i> Report Analysis
+</a>
+
+<a href="/ambulance">
+<i class="fa-solid fa-truck-medical"></i> Ambulance
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+</div>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="dashboard-top">
+<div>
+<h1>Prediction Result</h1>
+<p>AI-powered health analysis with real-time insights</p>
+</div>
+</div>
+
+<!-- TOP RESULT -->
+<section class="dashboard-banner">
+
+<div class="banner-left full-width-result">
+
+<h2>Your Health Score</h2>
+
+<div style="width:260px;height:260px;margin:20px auto;">
+<canvas id="scoreChart"></canvas>
+</div>
+
+<h3 class="risk-text {{color}}">
+{{risk}}
+</h3>
+
+<p class="advice-text">
+{{advice}}
+</p>
+
+<div class="hero-buttons center-btns">
+
+<a href="/disease" class="main-btn">
+Check Again
+</a>
+
+<a href="/dashboard" class="secondary-btn">
+Dashboard
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- INSIGHTS -->
+<section class="cards">
+
+<div class="card result-pro-card glow-border">
+<h2>Recommended Actions</h2>
+
+{% if risk == "Low Risk" %}
+<p class="clean-list">
+• Balanced diet <br>
+• Daily exercise <br>
+• Annual checkup
+</p>
+
+{% elif risk == "Medium Risk" %}
+<p class="clean-list">
+• Reduce junk food <br>
+• Walk daily <br>
+• Doctor consultation
+</p>
+
+{% else %}
+<p class="clean-list">
+• Immediate doctor visit <br>
+• Blood tests needed <br>
+• BP / Sugar monitor
+</p>
+{% endif %}
+
+</div>
+
+<div class="card result-pro-card glow-border">
+<h2>Live Health Values</h2>
+<p class="clean-list">
+Age: {{age}} Years <br>
+BMI: {{bmi}} <br>
+BP Status: {{bp_status}} <br>
+Sugar Status: {{sugar_status}}
+</p>
+</div>
+
+<div class="card result-pro-card glow-border">
+<h2>AI Risk Insights</h2>
+<p class="clean-list">
+Heart Risk: {{heart_score}}% <br>
+Diabetes Risk: {{diabetes_score}}% <br>
+Respiratory Risk: {{respiratory_score}}% <br>
+Obesity Risk: {{obesity_score}}%
+</p>
+</div>
+
+<div class="card result-pro-card glow-border">
+<h2>Why This Result?</h2>
+
+<p class="clean-list">
+{% for item in reasons %}
+• {{item}} <br>
+{% endfor %}
+</p>
+
+</div>
+
+</section>
+
+<!-- CHARTS -->
+<section class="cards">
+
+<div class="card result-pro-card glow-border">
+<h2>Health Risk Split</h2>
+<div style="height:220px;">
+<canvas id="pieChart"></canvas>
+</div>
+</div>
+
+<div class="card result-pro-card glow-border">
+<h2>Vitals Overview</h2>
+<div style="height:220px;">
+<canvas id="barChart"></canvas>
+</div>
+</div>
+
+<div class="card result-pro-card glow-border">
+<h2>AI Disease Comparison</h2>
+<div style="height:220px;">
+<canvas id="lineChart"></canvas>
+</div>
+</div>
+
+</section>
+
+<!-- STEP 7 DIET PLAN -->
+<section class="result-pro-card glow-border" style="margin-top:24px;">
+
+<h2 class="section-title">
+🥗 Personalized Diet & Lifestyle Plan
+</h2>
+
+<div class="food-grid">
+
+<div class="food-box">
+<h3>🍎 Morning</h3>
+<p>
+Warm water, fruit bowl, oats, light breakfast.
+</p>
+</div>
+
+<div class="food-box">
+<h3>🥗 Lunch</h3>
+<p>
+Salad, chapati, dal, green vegetables, curd.
+</p>
+</div>
+
+<div class="food-box">
+<h3>🍵 Evening</h3>
+<p>
+Green tea, nuts, light snacks, short walk.
+</p>
+</div>
+
+<div class="food-box">
+<h3>🍲 Dinner</h3>
+<p>
+Light meal, soup, vegetables, low sugar foods.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- EXERCISE -->
+<section class="result-pro-card glow-border" style="margin-top:24px;">
+
+<h2 class="section-title">
+🏃 Recommended Activity Plan
+</h2>
+
+<p class="clean-list">
+• Walking 30 minutes daily <br>
+• Stretching 10 minutes <br>
+• 7+ hours sleep daily <br>
+• Hydration 3 liters/day <br>
+• Stress reduction meditation
+</p>
+
+<span class="badge-chip">
+AI Wellness Suggestion Enabled
+</span>
+
+</section>
+
+<!-- EXTRA NOTES -->
+<section class="big-note">
+<strong>Important:</strong>
+This result is generated using AI risk analysis and should be used
+for awareness purposes only. Please consult a healthcare professional
+for medical diagnosis or emergency care.
+</section>
+
+</main>
+</div>
+
+<!-- CHARTS -->
+<script>
+
+let score = {{score}};
+let heart = {{heart_score}};
+let diabetes = {{diabetes_score}};
+let respiratory = {{respiratory_score}};
+let obesity = {{obesity_score}};
+let bmi = {{bmi}};
+let bp = {{bp}};
+let sugar = {{sugar}};
+
+/* SCORE */
+new Chart(document.getElementById("scoreChart"),{
+type:"doughnut",
+data:{
+labels:["Score","Remaining"],
+datasets:[{
+data:[score,100-score],
+cutout:"72%",
+borderWidth:0
+}]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{display:false}
+}
+},
+plugins:[{
+id:'centerText',
+beforeDraw(chart){
+const {width,height,ctx}=chart;
+ctx.restore();
+ctx.font="bold 34px Arial";
+ctx.fillStyle="#0f172a";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText(score+"%",width/2,height/2);
+ctx.save();
+}
+}]
+});
+
+/* PIE */
+new Chart(document.getElementById("pieChart"),{
+type:"pie",
+data:{
+labels:["Heart","Diabetes","Respiratory","Obesity"],
+datasets:[{
+data:[heart,diabetes,respiratory,obesity]
+}]
+},
+options:{responsive:true}
+});
+
+/* BAR */
+new Chart(document.getElementById("barChart"),{
+type:"bar",
+data:{
+labels:["BP","Sugar","BMI"],
+datasets:[{
+data:[bp,sugar,bmi],
+borderRadius:8
+}]
+},
+options:{responsive:true}
+});
+
+/* LINE */
+new Chart(document.getElementById("lineChart"),{
+type:"line",
+data:{
+labels:["Heart","Diabetes","Respiratory","Obesity"],
+datasets:[{
+data:[heart,diabetes,respiratory,obesity],
+fill:false,
+tension:.4
+}]
+},
+options:{responsive:true}
+});
+
+</script>
+
+</body>
+</html>

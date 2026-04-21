@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Appointments | Health Guard AI</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+.app-page{
+padding:28px;
+animation:fadeIn .8s ease;
+}
+
+.hero-box{
+background:rgba(255,255,255,.75);
+backdrop-filter:blur(14px);
+border-radius:24px;
+padding:28px;
+border:1px solid rgba(255,255,255,.45);
+box-shadow:0 18px 45px rgba(0,0,0,.08);
+margin-bottom:24px;
+position:relative;
+overflow:hidden;
+}
+
+.hero-box:before{
+content:"";
+position:absolute;
+inset:0;
+padding:1px;
+border-radius:24px;
+background:linear-gradient(135deg,#06b6d4,#2563eb,#22c55e,#8b5cf6);
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+opacity:.78;
+}
+
+.hero-box h1{
+font-size:32px;
+margin-bottom:10px;
+color:#0f172a;
+}
+
+.hero-box p{
+font-size:15px;
+line-height:1.8;
+color:#475569;
+}
+
+.stats-row{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-top:20px;
+}
+
+.stat-card{
+background:rgba(255,255,255,.74);
+padding:18px;
+border-radius:18px;
+text-align:center;
+border:1px solid rgba(255,255,255,.45);
+box-shadow:0 12px 28px rgba(0,0,0,.06);
+transition:.35s;
+}
+
+.stat-card:hover{
+transform:translateY(-5px);
+}
+
+.stat-card h2{
+font-size:26px;
+color:#0ea5e9;
+margin-bottom:6px;
+}
+
+.stat-card p{
+font-size:13px;
+color:#64748b;
+}
+
+.table-box{
+margin-top:26px;
+background:rgba(255,255,255,.75);
+backdrop-filter:blur(14px);
+border-radius:24px;
+padding:22px;
+border:1px solid rgba(255,255,255,.45);
+box-shadow:0 18px 40px rgba(0,0,0,.07);
+overflow:auto;
+}
+
+.table-box table{
+width:100%;
+border-collapse:collapse;
+min-width:820px;
+}
+
+.table-box th{
+text-align:left;
+padding:16px;
+font-size:14px;
+color:#0f172a;
+border-bottom:1px solid #e5e7eb;
+}
+
+.table-box td{
+padding:16px;
+font-size:14px;
+color:#334155;
+border-bottom:1px solid #f1f5f9;
+}
+
+.badge{
+display:inline-block;
+padding:8px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+}
+
+.pending{
+background:#fef3c7;
+color:#92400e;
+}
+
+.confirmed{
+background:#dcfce7;
+color:#166534;
+}
+
+.cancelled{
+background:#fee2e2;
+color:#991b1b;
+}
+
+.action-btn{
+height:40px;
+padding:0 16px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:13px;
+font-weight:700;
+transition:.3s;
+}
+
+.cancel-btn{
+background:#ef4444;
+color:#fff;
+}
+
+.cancel-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 12px 20px rgba(239,68,68,.25);
+}
+
+.view-btn{
+background:#fff;
+border:1px solid #dbeafe;
+color:#0f172a;
+margin-right:8px;
+}
+
+.view-btn:hover{
+transform:translateY(-3px);
+}
+
+.empty-card{
+margin-top:26px;
+padding:45px;
+text-align:center;
+background:rgba(255,255,255,.74);
+border-radius:24px;
+border:1px solid rgba(255,255,255,.45);
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(18px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@media(max-width:980px){
+
+.stats-row{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="bg-blur one"></div>
+<div class="bg-blur two"></div>
+<div class="bg-blur three"></div>
+
+<div class="dashboard-container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar premium-sidebar">
+
+<div class="sidebar-logo">
+<h2>🩺 HealthGuard</h2>
+<p>AI Healthcare Platform</p>
+</div>
+
+<nav class="menu-links">
+
+<a href="/dashboard">
+<i class="fa-solid fa-house"></i> Dashboard
+</a>
+
+<a href="/doctor">
+<i class="fa-solid fa-user-doctor"></i> Doctors
+</a>
+
+<a href="/my-appointments" class="active-link">
+<i class="fa-solid fa-calendar-check"></i> Appointments
+</a>
+
+<a href="/profile">
+<i class="fa-solid fa-user"></i> Profile
+</a>
+
+</nav>
+
+<a href="/logout" class="side-logout">
+<i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<div class="dashboard-top">
+<div>
+<h1>📅 My Appointments</h1>
+<p>Track your booked consultations and manage appointments easily.</p>
+</div>
+</div>
+
+<div class="app-page">
+
+<div class="hero-box">
+
+<h1>Doctor Consultation History</h1>
+
+<p>
+Manage bookings, view doctor details and cancel appointments if required.
+</p>
+
+<div class="stats-row">
+
+<div class="stat-card">
+<h2>{{ total }}</h2>
+<p>Total Bookings</p>
+</div>
+
+<div class="stat-card">
+<h2>{{ confirmed }}</h2>
+<p>Confirmed</p>
+</div>
+
+<div class="stat-card">
+<h2>{{ pending }}</h2>
+<p>Pending</p>
+</div>
+
+</div>
+
+</div>
+
+{% if appointments and appointments|length > 0 %}
+
+<div class="table-box">
+
+<table>
+
+<thead>
+<tr>
+<th>Doctor</th>
+<th>Speciality</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for row in appointments %}
+
+<tr>
+
+<td>{{ row.doctor_name }}</td>
+
+<td>{{ row.speciality }}</td>
+
+<td>{{ row.date }}</td>
+
+<td>{{ row.time }}</td>
+
+<td>
+
+{% if row.status == 'Confirmed' %}
+<span class="badge confirmed">Confirmed</span>
+
+{% elif row.status == 'Cancelled' %}
+<span class="badge cancelled">Cancelled</span>
+
+{% else %}
+<span class="badge pending">Pending</span>
+{% endif %}
+
+</td>
+
+<td>
+
+<button class="action-btn view-btn">
+View
+</button>
+
+<form
+method="POST"
+action="/cancel-appointment"
+style="display:inline;">
+
+<input
+type="hidden"
+name="id"
+value="{{ row.id }}">
+
+<button
+type="submit"
+class="action-btn cancel-btn">
+
+Cancel
+
+</button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="empty-card">
+<h2>No Appointments Yet</h2>
+<p>Book a doctor consultation to view it here.</p>
+</div>
+
+{% endif %}
+
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

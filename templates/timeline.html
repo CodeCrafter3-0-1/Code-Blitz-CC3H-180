@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Timeline | Health Guard AI</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#eff6ff,#f0fdf4,#ecfeff);
+padding:25px;
+color:#0f172a;
+}
+
+.container{
+max-width:1450px;
+margin:auto;
+}
+
+/* HEADER */
+
+.top{
+background:rgba(255,255,255,.7);
+backdrop-filter:blur(18px);
+padding:28px;
+border-radius:22px;
+border:1px solid rgba(255,255,255,.4);
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+margin-bottom:25px;
+animation:fade 1s ease;
+}
+
+.top h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+.top p{
+font-size:18px;
+color:#64748b;
+}
+
+/* TABLE */
+
+.table-box{
+background:#fff;
+padding:25px;
+border-radius:22px;
+box-shadow:0 12px 30px rgba(0,0,0,.08);
+margin-bottom:25px;
+border:1px solid #e2e8f0;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:16px;
+text-align:left;
+border-bottom:1px solid #e2e8f0;
+}
+
+th{
+background:#f8fafc;
+font-size:16px;
+}
+
+tr:hover{
+background:#f8fafc;
+transition:.3s;
+}
+
+/* CARDS */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:25px;
+}
+
+.chart-card{
+background:#fff;
+padding:25px;
+border-radius:22px;
+box-shadow:0 12px 30px rgba(0,0,0,.08);
+border:1px solid #e2e8f0;
+height:390px;
+transition:.4s;
+}
+
+.chart-card:hover{
+transform:translateY(-8px);
+box-shadow:0 18px 45px rgba(14,165,233,.18);
+}
+
+.chart-card h2{
+font-size:24px;
+margin-bottom:20px;
+}
+
+/* animation */
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@media(max-width:900px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.top h1{
+font-size:32px;
+}
+
+table{
+font-size:14px;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<!-- TOP -->
+<div class="top">
+<h1>📈 Health Activity Timeline</h1>
+<p>Track user reports, predictions and health analytics in real time.</p>
+</div>
+
+<!-- TABLE -->
+<div class="table-box">
+
+<table>
+
+<tr>
+<th>Date</th>
+<th>Activity</th>
+<th>Status</th>
+<th>Result</th>
+</tr>
+
+<tr>
+<td>21 Apr</td>
+<td>Report Uploaded</td>
+<td>Completed</td>
+<td>Normal</td>
+</tr>
+
+<tr>
+<td>22 Apr</td>
+<td>Disease Prediction</td>
+<td>Completed</td>
+<td>Low Risk</td>
+</tr>
+
+<tr>
+<td>23 Apr</td>
+<td>Chatbot Consultation</td>
+<td>Completed</td>
+<td>Fever Advice</td>
+</tr>
+
+<tr>
+<td>24 Apr</td>
+<td>Emergency Check</td>
+<td>Standby</td>
+<td>Ready</td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- CHARTS -->
+<div class="grid">
+
+<div class="chart-card">
+<h2>📊 Weekly Prediction Activity</h2>
+<canvas id="chart1"></canvas>
+</div>
+
+<div class="chart-card">
+<h2>🩺 Disease Cases Trend</h2>
+<canvas id="chart2"></canvas>
+</div>
+
+<div class="chart-card">
+<h2>❤️ Health Risk Levels</h2>
+<canvas id="chart3"></canvas>
+</div>
+
+<div class="chart-card">
+<h2>📅 Monthly Reports Upload</h2>
+<canvas id="chart4"></canvas>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* chart 1 */
+
+new Chart(document.getElementById("chart1"),{
+type:"line",
+data:{
+labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+datasets:[{
+label:"Predictions",
+data:[4,7,5,8,10,6,9],
+borderWidth:3,
+fill:true,
+tension:.4
+}]
+}
+});
+
+/* chart 2 */
+
+new Chart(document.getElementById("chart2"),{
+type:"bar",
+data:{
+labels:["Heart","Sugar","BP","Lungs"],
+datasets:[{
+data:[12,19,9,14],
+borderRadius:12
+}]
+}
+});
+
+/* chart 3 */
+
+new Chart(document.getElementById("chart3"),{
+type:"doughnut",
+data:{
+labels:["Low","Medium","High"],
+datasets:[{
+data:[58,27,15]
+}]
+}
+});
+
+/* chart 4 */
+
+new Chart(document.getElementById("chart4"),{
+type:"radar",
+data:{
+labels:["Jan","Feb","Mar","Apr","May","Jun"],
+datasets:[{
+data:[12,18,9,22,15,28],
+fill:true
+}]
+}
+});
+
+</script>
+
+</body>
+</html>
